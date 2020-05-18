@@ -10,9 +10,9 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/selcukusta/simple-image-server/backend/constant"
-	helper "github.com/selcukusta/simple-image-server/backend/helper"
-	processor "github.com/selcukusta/simple-image-server/backend/image-processor"
+	"github.com/selcukusta/simple-image-server/constant"
+	helper "github.com/selcukusta/simple-image-server/helper"
+	processor "github.com/selcukusta/simple-image-server/image-processor"
 	drive "google.golang.org/api/drive/v2"
 )
 
@@ -35,7 +35,10 @@ func GoogleDriveHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(fmt.Sprintf("%s: %s", "Unable to create Drive service", err.Error()))
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(errorMessage))
+		_, err = w.Write([]byte(errorMessage))
+		if err != nil {
+			log.Println(fmt.Sprintf("%s: %s", "Unable to write HTTP response message", err.Error()))
+		}
 		return
 	}
 
@@ -43,7 +46,10 @@ func GoogleDriveHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(fmt.Sprintf("%s: %s", "Unable to download file", err.Error()))
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(errorMessage))
+		_, err = w.Write([]byte(errorMessage))
+		if err != nil {
+			log.Println(fmt.Sprintf("%s: %s", "Unable to write HTTP response message", err.Error()))
+		}
 		return
 	}
 
@@ -52,7 +58,10 @@ func GoogleDriveHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(fmt.Sprintf("%s: %s", "Downloaded data has been corrupted", err.Error()))
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(errorMessage))
+		_, err = w.Write([]byte(errorMessage))
+		if err != nil {
+			log.Println(fmt.Sprintf("%s: %s", "Unable to write HTTP response message", err.Error()))
+		}
 		return
 	}
 
@@ -60,7 +69,10 @@ func GoogleDriveHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(fmt.Sprintf("%s: %s", errMessage, err.Error()))
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(errorMessage))
+		_, err = w.Write([]byte(errorMessage))
+		if err != nil {
+			log.Println(fmt.Sprintf("%s: %s", "Unable to write HTTP response message", err.Error()))
+		}
 		return
 	}
 
@@ -69,5 +81,8 @@ func GoogleDriveHandler(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Cache-Control", fmt.Sprintf("public, max-age=%d", maxAge))
 	}
 	w.Header().Add("ETag", string(res.Header.Get("Etag")))
-	w.Write(result)
+	_, err = w.Write(result)
+	if err != nil {
+		log.Println(fmt.Sprintf("%s: %s", "Unable to write HTTP response message", err.Error()))
+	}
 }

@@ -45,26 +45,30 @@ func ImageProcess(params map[string]string, imageAsByte []byte, contentType stri
 	}
 
 	if (width != x || height != y) && (width != 0 || height != 0) {
-		thumb := strings.IndexAny("t", params["option"]) != -1
-		if thumb {
+		if strings.ContainsAny("t", params["option"]) {
 			img = thumbImage(img, width, height)
 		} else {
-			smart := strings.IndexAny("s", params["option"]) != -1
-			img = resizeImage(img, width, height, smart)
+			img = resizeImage(img, width, height, strings.ContainsAny("s", params["option"]))
 		}
 	}
 
-	if strings.IndexAny("g", params["option"]) != -1 {
+	if strings.ContainsAny("g", params["option"]) {
 		img = grayscaleImage(img)
 	}
 
 	buf := new(bytes.Buffer)
 	switch contentType {
 	case "image/png":
-		png.Encode(buf, img)
+		err = png.Encode(buf, img)
+		if err != nil {
+			return nil, "Invalid image/png encoding operation", err
+		}
 	case "image/jpeg":
 		quality, _ := strconv.Atoi(params["quality"])
-		jpeg.Encode(buf, img, &jpeg.Options{Quality: quality})
+		err = jpeg.Encode(buf, img, &jpeg.Options{Quality: quality})
+		if err != nil {
+			return nil, "Invalid image/jpeg encoding operation", err
+		}
 	}
 
 	return buf.Bytes(), "", nil

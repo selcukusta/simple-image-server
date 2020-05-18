@@ -6,6 +6,7 @@
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=selcukusta_gdrive-image-server&metric=code_smells)](https://sonarcloud.io/dashboard?id=selcukusta_gdrive-image-server)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=selcukusta_gdrive-image-server&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=selcukusta_gdrive-image-server)
 
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/selcukusta/gdrive-image-server)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/selcukusta/gdrive-image-server/blob/master/LICENSE)
 
 Turn your Google Drive folder to the image hosting service!
@@ -18,7 +19,7 @@ You need to have a Google account to set up the project.
 
 Firstly, create a new project from [Google Developer Console](https://console.developers.google.com/). Go to the **Credentials** menu and create a new **Service Accounts** credential. It might be named as `[PROJECT_ALIAS]-xxxx-xxxxxxx.json`.
 
-Download it and rename as `gcloud-image-server-cred.json`. Put the file to the `/backend` folder (_it will be used for building Docker image_).
+Download it and rename as `gcloud-image-server-cred.json`. Put the file to the **root** folder (_it will be used for building Docker image_).
 
 Copy your service account mail address (_it will be used for sharing your images with the project_).
 

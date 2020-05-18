@@ -63,8 +63,13 @@ Temporary Items
 .history
 
 ### Custom ###
+assets/
+cache/
 .dockerignore
 .gitignore
+.pre-commit-config.yaml
 Dockerfile
+LICENSE
+README.md
 
 # End of https://www.gitignore.io/api/go,macos,visualstudiocode

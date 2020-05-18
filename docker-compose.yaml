@@ -10,5 +10,5 @@ services:
     restart: always
 
   backend:
-    build: ./backend
+    build: ./
     restart: always

@@ -12,9 +12,9 @@ import (
 	"github.com/namsral/flag"
 
 	"github.com/gorilla/mux"
-	constant "github.com/selcukusta/simple-image-server/backend/constant"
-	gdrive "github.com/selcukusta/simple-image-server/backend/gdrive-handler"
-	helper "github.com/selcukusta/simple-image-server/backend/helper"
+	constant "github.com/selcukusta/simple-image-server/constant"
+	gdrive "github.com/selcukusta/simple-image-server/gdrive-handler"
+	helper "github.com/selcukusta/simple-image-server/helper"
 )
 
 func validateRangeParams(value string, minValue int, maxValue int) bool {
@@ -67,7 +67,7 @@ func main() {
 								return false
 							}
 
-							if validateRangeParams(matches[i], min, max) == false {
+							if !validateRangeParams(matches[i], min, max) {
 								return false
 							}
 
