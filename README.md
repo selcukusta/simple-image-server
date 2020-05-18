@@ -1,5 +1,11 @@
 # Host Your Own Image Server based on Google Drive
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=selcukusta_gdrive-image-server&metric=alert_status)](https://sonarcloud.io/dashboard?id=selcukusta_gdrive-image-server)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=selcukusta_gdrive-image-server&metric=sqale_index)](https://sonarcloud.io/dashboard?id=selcukusta_gdrive-image-server)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=selcukusta_gdrive-image-server&metric=bugs)](https://sonarcloud.io/dashboard?id=selcukusta_gdrive-image-server)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=selcukusta_gdrive-image-server&metric=code_smells)](https://sonarcloud.io/dashboard?id=selcukusta_gdrive-image-server)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=selcukusta_gdrive-image-server&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=selcukusta_gdrive-image-server)
+
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/selcukusta/gdrive-image-server/blob/master/LICENSE)
 
 Turn your Google Drive folder to the image hosting service!
