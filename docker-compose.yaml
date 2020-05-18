@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  cache:
+    depends_on:
+      - backend
+    build: ./cache
+    ports:
+      - "8080:80"
+    restart: always
+
+  backend:
+    build: ./backend
+    restart: always
