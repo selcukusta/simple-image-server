@@ -71,6 +71,7 @@ build/
 .pre-commit-config.yaml
 docker-compose.yaml
 Dockerfile
+gcloud-image-server-cred.json
 LICENSE
 README.md
 seed.Dockerfile

@@ -1,6 +1,6 @@
 FROM golang:1.14-alpine as builder
-WORKDIR $GOPATH/src/github.com/selcukusta/simple-image-server
-COPY . .
+COPY . $GOPATH/src/github.com/selcukusta/simple-image-server
+WORKDIR $GOPATH/src/github.com/selcukusta/simple-image-server/cmd/image-server
 RUN go get -d -v
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -a -installsuffix cgo -o $GOPATH/bin/simple-image-server .
 COPY ./gcloud-image-server-cred.json $GOPATH/bin
