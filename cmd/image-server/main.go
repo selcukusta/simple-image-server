@@ -87,7 +87,7 @@ func main() {
 			rm.Vars = vars
 		}
 		return available
-	}).HandlerFunc(googledrive.GoogleDriveHandler)
+	}).HandlerFunc(googledrive.Handler)
 	router.NewRoute().MatcherFunc(func(r *http.Request, rm *mux.RouteMatch) bool {
 		patterns := [2]string{
 			`/i/gridfs/(?P<quality_r_1_100>\d+)/(?P<width_r_0_5000>\d+)x(?P<height_r_0_5000>\d+)/(?P<option>[gts]{1,3})/(?P<path>.*)`,
@@ -99,7 +99,7 @@ func main() {
 			rm.Vars = vars
 		}
 		return available
-	}).HandlerFunc(gridfs.GridFSHandler)
+	}).HandlerFunc(gridfs.Handler)
 
 	srv := &http.Server{
 		Handler:      router,

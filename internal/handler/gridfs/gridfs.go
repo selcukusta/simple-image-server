@@ -9,10 +9,10 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/selcukusta/simple-image-server/internal/processor"
 	"github.com/selcukusta/simple-image-server/internal/util/connection"
 	"github.com/selcukusta/simple-image-server/internal/util/constant"
 	"github.com/selcukusta/simple-image-server/internal/util/helper"
+	"github.com/selcukusta/simple-image-server/internal/util/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/gridfs"
@@ -26,8 +26,8 @@ type gridFile struct {
 	} `json:"metadata" bson:"metadata"`
 }
 
-//GridFSHandler is using connect to MongoDB and get the image
-func GridFSHandler(w http.ResponseWriter, r *http.Request) {
+//Handler is using connect to MongoDB and get the image
+func Handler(w http.ResponseWriter, r *http.Request) {
 	path := mux.Vars(r)["path"]
 	defer helper.TimeTrack(time.Now(), path)
 
@@ -94,23 +94,6 @@ func GridFSHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, errMessage, err := processor.ImageProcess(mux.Vars(r), buf.Bytes(), fileInfo.Metadata.ContentType)
-	if err != nil {
-		log.Println(fmt.Sprintf(constant.LogErrorFormat, errMessage, err.Error()))
-		w.WriteHeader(http.StatusInternalServerError)
-		_, err = w.Write([]byte(constant.ErrorMessage))
-		if err != nil {
-			log.Println(fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
-		}
-		return
-	}
-
-	if constant.CacheControlMaxAge != -1 {
-		maxAge := constant.CacheControlMaxAge * 24 * 60 * 60
-		w.Header().Add("Cache-Control", fmt.Sprintf("public, max-age=%d", maxAge))
-	}
-	_, err = w.Write(result)
-	if err != nil {
-		log.Println(fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
-	}
+	finalizer := model.HandlerFinalizer{ResponseWriter: w, Headers: nil}
+	finalizer.Finalize(mux.Vars(r), buf.Bytes(), fileInfo.Metadata.ContentType)
 }

@@ -9,14 +9,14 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/selcukusta/simple-image-server/internal/processor"
 	"github.com/selcukusta/simple-image-server/internal/util/constant"
 	"github.com/selcukusta/simple-image-server/internal/util/helper"
+	"github.com/selcukusta/simple-image-server/internal/util/model"
 	drive "google.golang.org/api/drive/v2"
 )
 
-//GoogleDriveHandler is using connect to Google Drive subscription and get the image
-func GoogleDriveHandler(w http.ResponseWriter, r *http.Request) {
+//Handler is using connect to Google Drive subscription and get the image
+func Handler(w http.ResponseWriter, r *http.Request) {
 	if !helper.GoogleCredentialIsAvailable() {
 		log.Println(`Google credential file cannot be found! Please create the file and set the "GOOGLE_APPLICATION_CREDENTIALS" environment variable.`)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -67,24 +67,7 @@ func GoogleDriveHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, errMessage, err := processor.ImageProcess(mux.Vars(r), downloadedData.Bytes(), res.Header.Get("Content-Type"))
-	if err != nil {
-		log.Println(fmt.Sprintf(constant.LogErrorFormat, errMessage, err.Error()))
-		w.WriteHeader(http.StatusInternalServerError)
-		_, err = w.Write([]byte(constant.ErrorMessage))
-		if err != nil {
-			log.Println(fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
-		}
-		return
-	}
-
-	if constant.CacheControlMaxAge != -1 {
-		maxAge := constant.CacheControlMaxAge * 24 * 60 * 60
-		w.Header().Add("Cache-Control", fmt.Sprintf("public, max-age=%d", maxAge))
-	}
-	w.Header().Add("ETag", string(res.Header.Get("Etag")))
-	_, err = w.Write(result)
-	if err != nil {
-		log.Println(fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
-	}
+	headers := make(map[string]string)
+	headers["ETag"] = string(res.Header.Get("Etag"))
+	model.HandlerFinalizer{ResponseWriter: w, Headers: headers}.Finalize(mux.Vars(r), downloadedData.Bytes(), res.Header.Get("Content-Type"))
 }
