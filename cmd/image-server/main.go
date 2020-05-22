@@ -41,13 +41,11 @@ func isRouteAvailable(patterns [2]string, url string) (bool, map[string]string) 
 					if split := strings.Split(name, "_"); len(split) == 4 && split[1] == "r" {
 						min, err := strconv.Atoi(split[2])
 						if err != nil {
-							log.Fatal(err)
 							return false, nil
 						}
 
 						max, err := strconv.Atoi(split[3])
 						if err != nil {
-							log.Fatal(err)
 							return false, nil
 						}
 
@@ -72,8 +70,7 @@ func main() {
 	flag.StringVar(&constant.Hostname, "hostname", "127.0.0.1", "Specify the hostname to listen to")
 	flag.StringVar(&constant.Port, "port", "8080", "Specify the port to listen to")
 	flag.IntVar(&constant.CacheControlMaxAge, "cache_control_max_age", 14, "Specify the max-age for cache-control header")
-	flag.StringVar(&connection.Hostname, "mongo_hostname", "127.0.0.1", "Specify the hostname to connect to MongoDB instance")
-	flag.StringVar(&connection.Port, "mongo_port", "27017", "Specify the port to connect to MongoDB instance")
+	flag.StringVar(&connection.ConnectionString, "mongo_connection_str", "mongodb://127.0.0.1:27017", "Specify the connection string to connect to MongoDB instance")
 	flag.Uint64Var(&connection.MaxPoolSize, "mongo_max_pool_size", 5, "Specify the max pool size for MongoDB connections")
 	flag.Parse()
 

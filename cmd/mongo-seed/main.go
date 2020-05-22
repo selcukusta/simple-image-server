@@ -17,29 +17,33 @@ import (
 
 func main() {
 
-	flag.StringVar(&connection.Hostname, "mongo_hostname", "127.0.0.1", "Specify the hostname to connect to MongoDB instance")
-	flag.StringVar(&connection.Port, "mongo_port", "27017", "Specify the port to connect to MongoDB instance")
+	flag.StringVar(&connection.ConnectionString, "mongo_connection_str", "mongodb://127.0.0.1:27017", "Specify the connection string to connect to MongoDB instance")
 	flag.Uint64Var(&connection.MaxPoolSize, "mongo_max_pool_size", 5, "Specify the max pool size for MongoDB connections")
 	flag.Parse()
 
-	conn := connection.InitiateMongoClient()
+	conn, err := connection.InitiateMongoClient()
+	if err != nil {
+		log.Fatal(err.Error())
+		os.Exit(1)
+	}
+
 	bucket, err := gridfs.NewBucket(
 		conn.Database("Photos"),
 	)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err.Error())
 		os.Exit(1)
 	}
 
 	files, err := ioutil.ReadDir("assets")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err.Error())
 	}
 
 	for _, fi := range files {
 		data, err := ioutil.ReadFile(path.Join("assets", fi.Name()))
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal(err.Error())
 		}
 
 		opts := options.GridFSUpload()
@@ -54,7 +58,7 @@ func main() {
 
 		_, err = uploadStream.Write(data)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal(err.Error())
 		}
 	}
 	log.Println(`Database seed operation is completed successfully!`)

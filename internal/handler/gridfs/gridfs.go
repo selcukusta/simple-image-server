@@ -34,7 +34,17 @@ func GridFSHandler(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	conn := connection.InitiateMongoClient()
+	conn, err := connection.InitiateMongoClient()
+	if err != nil {
+		log.Println(fmt.Sprintf(constant.LogErrorFormat, "Unable to connect MongoDB instance", err.Error()))
+		w.WriteHeader(http.StatusInternalServerError)
+		_, err = w.Write([]byte(constant.ErrorMessage))
+		if err != nil {
+			log.Println(fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
+		}
+		return
+	}
+
 	db := conn.Database("Photos")
 
 	bucket, err := gridfs.NewBucket(db)

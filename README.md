@@ -42,11 +42,10 @@ _NOTE: `ID` is not showing anywhere in the portal, it sucks! To catch it, right 
 
 Before running the application set these environment variables (or use `Docker` image, run with `docker container run -d --name mongodb-instance -p 27017:27017 mongo:3.6.18-xenial` and leave them default):
 
-| Name                  | Type     | Default Value |
-| :-------------------- | :------- | :------------ |
-| `MONGO_HOSTNAME`      | `string` | _127.0.0.1_   |
-| `MONGO_PORT`          | `string` | _27017_       |
-| `MONGO_MAX_POOL_SIZE` | `uint64` | _5_           |
+| Name                   | Type     | Default Value               |
+| :--------------------- | :------- | :-------------------------- |
+| `MONGO_CONNECTION_STR` | `string` | _mongodb://127.0.0.1:27017_ |
+| `MONGO_MAX_POOL_SIZE`  | `uint64` | _5_                         |
 
 Run `go run cmd/mongo-seed/main.go` command and create 3 sample record on the DB such as;
 

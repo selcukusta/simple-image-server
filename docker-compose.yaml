@@ -1,27 +1,27 @@
 version: "3.8"
 
 services:
-  mongodb:
+  db:
     image: mongo:3.6.18-xenial
     ports:
       - "27017:27017"
     restart: on-failure
   seed:
     depends_on:
-      - mongodb
+      - db
     build:
       context: ./
       dockerfile: seed.Dockerfile
     restart: on-failure
     environment:
-      MONGO_HOSTNAME: "mongodb"
+      MONGO_CONNECTION_STR: "mongodb://db:27017"
   web:
     depends_on:
-      - mongodb
+      - db
     build: ./
     restart: on-failure
     environment:
-      MONGO_HOSTNAME: "mongodb"
+      MONGO_CONNECTION_STR: "mongodb://db:27017"
   cache:
     depends_on:
       - web
