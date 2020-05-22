@@ -29,7 +29,7 @@ type gridFile struct {
 //Handler is using connect to MongoDB and get the image
 func Handler(w http.ResponseWriter, r *http.Request) {
 	path := mux.Vars(r)["path"]
-	defer helper.TimeTrack(time.Now(), path)
+	defer helper.TraceObject{HandlerName: "Google Drive", Parameter: path}.TimeTrack(time.Now())
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

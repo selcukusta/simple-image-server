@@ -5,8 +5,16 @@ import (
 	"time"
 )
 
+//TraceObject is using to store information about logged object
+type TraceObject struct {
+	HandlerName string
+	Parameter   string
+	Took        time.Duration
+}
+
 //TimeTrack will be used to calculate elapsed time of execution.
-func TimeTrack(start time.Time, name string) {
+func (o TraceObject) TimeTrack(start time.Time) {
 	elapsed := time.Since(start)
-	log.Printf("%s took %s", name, elapsed)
+	o.Took = elapsed
+	log.Printf("%+v", o)
 }
