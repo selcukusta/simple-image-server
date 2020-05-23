@@ -9,22 +9,49 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
-//HandlerFinalizer is using to create model for finalizing request
-type HandlerFinalizer struct {
+//SucceededFinalizer is using to create a model for succeeded finalizing requests
+type SucceededFinalizer struct {
 	ResponseWriter *fasthttp.RequestCtx
+	ContentType    string
 	Headers        map[string]string
 }
 
-//Finalize is using to finalize the request
-func (hf HandlerFinalizer) Finalize(params map[string]string, imageAsByte []byte, contentType string) {
-	result, errMessage, err := processor.ImageProcess(params, imageAsByte, contentType)
-	if err != nil {
-		log.Println(fmt.Sprintf(constant.LogErrorFormat, errMessage, err.Error()))
-		hf.ResponseWriter.SetStatusCode(fasthttp.StatusInternalServerError)
-		_, err = hf.ResponseWriter.WriteString(constant.ErrorMessage)
-		if err != nil {
-			log.Println(fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
+//FailedFinalizer is using to create a model for failed finalizing requests
+type FailedFinalizer struct {
+	ResponseWriter *fasthttp.RequestCtx
+	StdOut         *CustomError
+}
+
+//CustomError is using to create a model for custom exception
+type CustomError struct {
+	Message string
+	Detail  error
+}
+
+//Finalize is using to finalize the request unsuccessfully
+func (hf FailedFinalizer) Finalize() {
+	if hf.StdOut != nil {
+		if hf.StdOut.Detail != nil {
+			log.Println(fmt.Sprintf(constant.LogErrorFormat, hf.StdOut.Message, hf.StdOut.Detail.Error()))
+		} else {
+			log.Println(hf.StdOut.Message)
 		}
+	}
+
+	hf.ResponseWriter.Response.Header.Set("Content-Type", "text/html")
+	hf.ResponseWriter.SetStatusCode(fasthttp.StatusInternalServerError)
+	_, err := hf.ResponseWriter.WriteString(constant.ErrorMessage)
+	if err != nil {
+		log.Println(fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
+	}
+}
+
+//Finalize is using to finalize the request successfully
+func (hf SucceededFinalizer) Finalize(params map[string]string, imageAsByte []byte) {
+	result, errMessage, err := processor.ImageProcess(params, imageAsByte, hf.ContentType)
+	if err != nil {
+		customError := CustomError{Message: errMessage, Detail: err}
+		FailedFinalizer{ResponseWriter: hf.ResponseWriter, StdOut: &customError}.Finalize()
 		return
 	}
 
@@ -39,6 +66,7 @@ func (hf HandlerFinalizer) Finalize(params map[string]string, imageAsByte []byte
 		}
 	}
 
+	hf.ResponseWriter.Response.Header.Set("Content-Type", hf.ContentType)
 	_, err = hf.ResponseWriter.Write(result)
 	if err != nil {
 		log.Println(fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))

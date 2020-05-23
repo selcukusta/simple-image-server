@@ -3,12 +3,9 @@ package gridfs
 import (
 	"bytes"
 	"context"
-	"fmt"
-	"log"
 	"time"
 
 	"github.com/selcukusta/simple-image-server/internal/util/connection"
-	"github.com/selcukusta/simple-image-server/internal/util/constant"
 	"github.com/selcukusta/simple-image-server/internal/util/model"
 	"github.com/valyala/fasthttp"
 	"go.mongodb.org/mongo-driver/bson"
@@ -33,12 +30,8 @@ func Handler(ctx *fasthttp.RequestCtx, vars map[string]string) {
 
 	conn, err := connection.InitiateMongoClient()
 	if err != nil {
-		log.Println(fmt.Sprintf(constant.LogErrorFormat, "Unable to connect MongoDB instance", err.Error()))
-		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
-		_, err = ctx.WriteString(constant.ErrorMessage)
-		if err != nil {
-			log.Println(fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
-		}
+		customError := model.CustomError{Message: "Unable to connect MongoDB instance", Detail: err}
+		model.FailedFinalizer{ResponseWriter: ctx, StdOut: &customError}.Finalize()
 		return
 	}
 
@@ -46,50 +39,34 @@ func Handler(ctx *fasthttp.RequestCtx, vars map[string]string) {
 
 	bucket, err := gridfs.NewBucket(db)
 	if err != nil {
-		log.Println(fmt.Sprintf(constant.LogErrorFormat, "Unable to connect GridFS bucket", err.Error()))
-		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
-		_, err = ctx.WriteString(constant.ErrorMessage)
-		if err != nil {
-			log.Println(fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
-		}
+		customError := model.CustomError{Message: "Unable to connect GridFS bucket", Detail: err}
+		model.FailedFinalizer{ResponseWriter: ctx, StdOut: &customError}.Finalize()
 		return
 	}
 
 	fsFiles := db.Collection("fs.files")
 	objectID, err := primitive.ObjectIDFromHex(path)
 	if err != nil {
-		log.Println(fmt.Sprintf(constant.LogErrorFormat, "Unable to parse value to ObjectID", err.Error()))
-		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
-		_, err = ctx.WriteString(constant.ErrorMessage)
-		if err != nil {
-			log.Println(fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
-		}
+		customError := model.CustomError{Message: "Unable to parse value to ObjectID", Detail: err}
+		model.FailedFinalizer{ResponseWriter: ctx, StdOut: &customError}.Finalize()
 		return
 	}
 
 	var fileInfo gridFile
 	err = fsFiles.FindOne(ctx, bson.M{"_id": objectID}).Decode(&fileInfo)
 	if err != nil {
-		log.Println(fmt.Sprintf(constant.LogErrorFormat, "Unable to get file info", err.Error()))
-		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
-		_, err = ctx.WriteString(constant.ErrorMessage)
-		if err != nil {
-			log.Println(fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
-		}
+		customError := model.CustomError{Message: "Unable to get file info", Detail: err}
+		model.FailedFinalizer{ResponseWriter: ctx, StdOut: &customError}.Finalize()
 		return
 	}
 
 	var buf bytes.Buffer
 	_, err = bucket.DownloadToStream(objectID, &buf)
 	if err != nil {
-		log.Println(fmt.Sprintf(constant.LogErrorFormat, "Unable to download stream", err.Error()))
-		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
-		_, err = ctx.WriteString(constant.ErrorMessage)
-		if err != nil {
-			log.Println(fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
-		}
+		customError := model.CustomError{Message: "Unable to download stream", Detail: err}
+		model.FailedFinalizer{ResponseWriter: ctx, StdOut: &customError}.Finalize()
 		return
 	}
 
-	model.HandlerFinalizer{ResponseWriter: ctx, Headers: nil}.Finalize(vars, buf.Bytes(), fileInfo.Metadata.ContentType)
+	model.SucceededFinalizer{ResponseWriter: ctx, ContentType: fileInfo.Metadata.ContentType}.Finalize(vars, buf.Bytes())
 }
