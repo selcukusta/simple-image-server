@@ -9,6 +9,9 @@ func validateRange(value int, minValue int, maxValue int) bool {
 
 //ValidateRange is using to value is valid range
 func ValidateRange(value string, minValue int, maxValue int) bool {
+	if value == "" {
+		return false
+	}
 	numeric, _ := strconv.Atoi(value)
 	return validateRange(numeric, minValue, maxValue)
 }

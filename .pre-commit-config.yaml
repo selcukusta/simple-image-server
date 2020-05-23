@@ -7,3 +7,9 @@ repos:
         entry: golangci-lint run --fix
         language: golang
         pass_filenames: false
+      - id: go-unit-tests
+        name: go-unit-tests
+        description: Run unit tests.
+        entry: go test ./...
+        language: golang
+        pass_filenames: false
