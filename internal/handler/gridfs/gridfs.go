@@ -5,14 +5,13 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"net/http"
 	"time"
 
-	"github.com/gorilla/mux"
 	"github.com/selcukusta/simple-image-server/internal/util/connection"
 	"github.com/selcukusta/simple-image-server/internal/util/constant"
 	"github.com/selcukusta/simple-image-server/internal/util/helper"
 	"github.com/selcukusta/simple-image-server/internal/util/model"
+	"github.com/valyala/fasthttp"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/gridfs"
@@ -27,18 +26,18 @@ type gridFile struct {
 }
 
 //Handler is using connect to MongoDB and get the image
-func Handler(w http.ResponseWriter, r *http.Request) {
-	path := mux.Vars(r)["path"]
+func Handler(ctx *fasthttp.RequestCtx, vars map[string]string) {
+	path := vars["path"]
 	defer helper.TraceObject{HandlerName: "GridFS", Parameter: path}.TimeTrack(time.Now())
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	_, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	conn, err := connection.InitiateMongoClient()
 	if err != nil {
 		log.Println(fmt.Sprintf(constant.LogErrorFormat, "Unable to connect MongoDB instance", err.Error()))
-		w.WriteHeader(http.StatusInternalServerError)
-		_, err = w.Write([]byte(constant.ErrorMessage))
+		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+		_, err = ctx.WriteString(constant.ErrorMessage)
 		if err != nil {
 			log.Println(fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
 		}
@@ -50,8 +49,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	bucket, err := gridfs.NewBucket(db)
 	if err != nil {
 		log.Println(fmt.Sprintf(constant.LogErrorFormat, "Unable to connect GridFS bucket", err.Error()))
-		w.WriteHeader(http.StatusInternalServerError)
-		_, err = w.Write([]byte(constant.ErrorMessage))
+		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+		_, err = ctx.WriteString(constant.ErrorMessage)
 		if err != nil {
 			log.Println(fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
 		}
@@ -62,8 +61,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	objectID, err := primitive.ObjectIDFromHex(path)
 	if err != nil {
 		log.Println(fmt.Sprintf(constant.LogErrorFormat, "Unable to parse value to ObjectID", err.Error()))
-		w.WriteHeader(http.StatusInternalServerError)
-		_, err = w.Write([]byte(constant.ErrorMessage))
+		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+		_, err = ctx.WriteString(constant.ErrorMessage)
 		if err != nil {
 			log.Println(fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
 		}
@@ -74,8 +73,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	err = fsFiles.FindOne(ctx, bson.M{"_id": objectID}).Decode(&fileInfo)
 	if err != nil {
 		log.Println(fmt.Sprintf(constant.LogErrorFormat, "Unable to get file info", err.Error()))
-		w.WriteHeader(http.StatusInternalServerError)
-		_, err = w.Write([]byte(constant.ErrorMessage))
+		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+		_, err = ctx.WriteString(constant.ErrorMessage)
 		if err != nil {
 			log.Println(fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
 		}
@@ -86,14 +85,14 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	_, err = bucket.DownloadToStream(objectID, &buf)
 	if err != nil {
 		log.Println(fmt.Sprintf(constant.LogErrorFormat, "Unable to download stream", err.Error()))
-		w.WriteHeader(http.StatusInternalServerError)
-		_, err = w.Write([]byte(constant.ErrorMessage))
+		ctx.SetStatusCode(fasthttp.StatusInternalServerError)
+		_, err = ctx.WriteString(constant.ErrorMessage)
 		if err != nil {
 			log.Println(fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
 		}
 		return
 	}
 
-	finalizer := model.HandlerFinalizer{ResponseWriter: w, Headers: nil}
-	finalizer.Finalize(mux.Vars(r), buf.Bytes(), fileInfo.Metadata.ContentType)
+	finalizer := model.HandlerFinalizer{ResponseWriter: ctx, Headers: nil}
+	finalizer.Finalize(vars, buf.Bytes(), fileInfo.Metadata.ContentType)
 }
