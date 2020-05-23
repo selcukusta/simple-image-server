@@ -1,12 +1,12 @@
 package middleware
 
-import "net/http"
+import "github.com/valyala/fasthttp"
 
 //CommonMiddleware is using to add common headers to the response
-func CommonMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Add("Access-Control-Allow-Origin", "*")
-		w.Header().Add("Access-Control-Allow-Methods", "GET")
-		next.ServeHTTP(w, r)
-	})
+func CommonMiddleware(h fasthttp.RequestHandler) fasthttp.RequestHandler {
+	return func(ctx *fasthttp.RequestCtx) {
+		ctx.Response.Header.Add("Access-Control-Allow-Origin", "*")
+		ctx.Response.Header.Add("Access-Control-Allow-Methods", "GET")
+		h(ctx)
+	}
 }

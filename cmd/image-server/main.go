@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
-	"time"
 
 	"github.com/namsral/flag"
 	"github.com/selcukusta/simple-image-server/internal/handler/googledrive"
@@ -13,18 +11,29 @@ import (
 	"github.com/selcukusta/simple-image-server/internal/util/constant"
 	"github.com/selcukusta/simple-image-server/internal/util/helper"
 	"github.com/selcukusta/simple-image-server/internal/util/middleware"
-
-	"github.com/gorilla/mux"
+	"github.com/valyala/fasthttp"
 )
 
-func selectHandler(w http.ResponseWriter, r *http.Request) {
-	slug := mux.Vars(r)["slug"]
+func requestHandler(ctx *fasthttp.RequestCtx) {
+
+	patterns := [2]string{
+		`/i/(?P<slug>gdrive|gridfs)/(?P<quality_r_1_100>\d+)/(?P<width_r_0_5000>\d+)x(?P<height_r_0_5000>\d+)/(?P<option>[gts]{1,3})/(?P<path>.*)`,
+		`/i/(?P<slug>gdrive|gridfs)/(?P<quality_r_1_100>\d+)/(?P<width_r_0_5000>\d+)x(?P<height_r_0_5000>\d+)/(?P<path>.*)`,
+	}
+
+	available, vars := helper.IsRouteFit(patterns, string(ctx.Path()))
+	if !available {
+		ctx.SetStatusCode(fasthttp.StatusBadRequest)
+		return 
+	}
+
+	slug := vars["slug"]
 	switch slug {
 	case "gdrive":
-		googledrive.Handler(w, r)
+		googledrive.Handler(ctx, vars)
 		return
 	case "gridfs":
-		gridfs.Handler(w, r)
+		gridfs.Handler(ctx, vars)
 		return
 	}
 }
@@ -38,27 +47,10 @@ func main() {
 	flag.Uint64Var(&connection.MaxPoolSize, "mongo_max_pool_size", 5, "Specify the max pool size for MongoDB connections")
 	flag.Parse()
 
-	var router = mux.NewRouter()
-	router.Use(middleware.CommonMiddleware)
-	router.NewRoute().MatcherFunc(func(r *http.Request, rm *mux.RouteMatch) bool {
-		patterns := [2]string{
-			`/i/(?P<slug>gdrive|gridfs)/(?P<quality_r_1_100>\d+)/(?P<width_r_0_5000>\d+)x(?P<height_r_0_5000>\d+)/(?P<option>[gts]{1,3})/(?P<path>.*)`,
-			`/i/(?P<slug>gdrive|gridfs)/(?P<quality_r_1_100>\d+)/(?P<width_r_0_5000>\d+)x(?P<height_r_0_5000>\d+)/(?P<path>.*)`,
-		}
+	handler := requestHandler
+	handler = middleware.CommonMiddleware(handler)
 
-		available, vars := helper.IsRouteFit(patterns, r.URL.Path)
-		if available {
-			rm.Vars = vars
-		}
-		return available
-	}).HandlerFunc(selectHandler)
-
-	srv := &http.Server{
-		Handler:      router,
-		Addr:         fmt.Sprintf("%s:%s", constant.Hostname, constant.Port),
-		WriteTimeout: 15 * time.Second,
-		ReadTimeout:  15 * time.Second,
-	}
-	log.Println(fmt.Sprintf("Server is started: %s", srv.Addr))
-	log.Fatal(srv.ListenAndServe())
+	addr := fmt.Sprintf("%s:%s", constant.Hostname, constant.Port)
+	log.Println(fmt.Sprintf("Server is started: %s", addr))
+	log.Fatal(fasthttp.ListenAndServe(addr, handler))
 }
