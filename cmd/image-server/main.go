@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/namsral/flag"
 	"github.com/selcukusta/simple-image-server/internal/handler/googledrive"
@@ -24,10 +25,11 @@ func requestHandler(ctx *fasthttp.RequestCtx) {
 	available, vars := helper.IsRouteFit(patterns, string(ctx.Path()))
 	if !available {
 		ctx.SetStatusCode(fasthttp.StatusBadRequest)
-		return 
+		return
 	}
-
 	slug := vars["slug"]
+	path := string(ctx.Path())
+	defer helper.TraceObject{HandlerName: slug, Parameter: path}.TimeTrack(time.Now())
 	switch slug {
 	case "gdrive":
 		googledrive.Handler(ctx, vars)

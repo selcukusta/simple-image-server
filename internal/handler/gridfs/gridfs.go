@@ -9,7 +9,6 @@ import (
 
 	"github.com/selcukusta/simple-image-server/internal/util/connection"
 	"github.com/selcukusta/simple-image-server/internal/util/constant"
-	"github.com/selcukusta/simple-image-server/internal/util/helper"
 	"github.com/selcukusta/simple-image-server/internal/util/model"
 	"github.com/valyala/fasthttp"
 	"go.mongodb.org/mongo-driver/bson"
@@ -28,7 +27,6 @@ type gridFile struct {
 //Handler is using connect to MongoDB and get the image
 func Handler(ctx *fasthttp.RequestCtx, vars map[string]string) {
 	path := vars["path"]
-	defer helper.TraceObject{HandlerName: "GridFS", Parameter: path}.TimeTrack(time.Now())
 
 	_, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -93,6 +91,5 @@ func Handler(ctx *fasthttp.RequestCtx, vars map[string]string) {
 		return
 	}
 
-	finalizer := model.HandlerFinalizer{ResponseWriter: ctx, Headers: nil}
-	finalizer.Finalize(vars, buf.Bytes(), fileInfo.Metadata.ContentType)
+	model.HandlerFinalizer{ResponseWriter: ctx, Headers: nil}.Finalize(vars, buf.Bytes(), fileInfo.Metadata.ContentType)
 }

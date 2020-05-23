@@ -28,9 +28,8 @@ func Handler(ctx *fasthttp.RequestCtx, vars map[string]string) {
 	}
 
 	path := vars["path"]
-	defer helper.TraceObject{HandlerName: "Google Drive", Parameter: path}.TimeTrack(time.Now())
 
-	_, cancel := context.WithTimeout(ctx, 5 * time.Second)
+	_, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
 	service, err := drive.NewService(ctx)
