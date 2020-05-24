@@ -9,9 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/muesli/smartcrop"
-	"github.com/muesli/smartcrop/nfnt"
-	r "github.com/nfnt/resize"
+	i "github.com/disintegration/imaging"
 )
 
 //ImageProcess will be used to resize the image, create the thumbnail from the image and change the color mode of image to the grayscale.
@@ -30,9 +28,6 @@ func ImageProcess(params map[string]string, imageAsByte []byte, contentType stri
 	if err != nil {
 		return nil, fmt.Sprintf("Image (%s) decode process is failed", contentType), err
 	}
-	bounds := img.Bounds()
-	x := bounds.Dx()
-	y := bounds.Dy()
 
 	width, err := strconv.Atoi(params["width"])
 	if err != nil {
@@ -44,63 +39,52 @@ func ImageProcess(params map[string]string, imageAsByte []byte, contentType stri
 		return nil, "Invalid height param", err
 	}
 
-	if (width != x || height != y) && (width != 0 || height != 0) {
-		if strings.ContainsAny("t", params["option"]) {
-			img = thumbImage(img, width, height)
-		} else {
-			img = resizeImage(img, width, height, strings.ContainsAny("s", params["option"]))
-		}
+	bounds := img.Bounds()
+	w := bounds.Dx()
+	h := bounds.Dy()
+
+	if (width == w && height == h) || (width == 0 && height == 0) {
+		return imageProcess(params, img, contentType)
 	}
 
+	if !strings.ContainsAny("tc", params["option"]) || width == 0 || height == 0 {
+		img = i.Resize(img, width, height, i.Lanczos)
+		return imageProcess(params, img, contentType)
+	}
+
+	if strings.ContainsAny("c", params["option"]) {
+		img = i.CropCenter(img, width, height)
+		return imageProcess(params, img, contentType)
+	}
+
+	if strings.ContainsAny("t", params["option"]) {
+		img = i.Thumbnail(img, width, height, i.Lanczos)
+		return imageProcess(params, img, contentType)
+	}
+
+	return nil, "Unknown parameters or sizes", err
+}
+
+func imageProcess(params map[string]string, img image.Image, contentType string) ([]byte, string, error) {
+
 	if strings.ContainsAny("g", params["option"]) {
-		img = grayscaleImage(img)
+		img = i.Grayscale(img)
 	}
 
 	buf := new(bytes.Buffer)
 	switch contentType {
 	case "image/png":
-		err = png.Encode(buf, img)
+		err := png.Encode(buf, img)
 		if err != nil {
 			return nil, "Invalid image/png encoding operation", err
 		}
 	case "image/jpeg":
 		quality, _ := strconv.Atoi(params["quality"])
-		err = jpeg.Encode(buf, img, &jpeg.Options{Quality: quality})
+		err := jpeg.Encode(buf, img, &jpeg.Options{Quality: quality})
 		if err != nil {
 			return nil, "Invalid image/jpeg encoding operation", err
 		}
 	}
 
 	return buf.Bytes(), "", nil
-}
-
-func thumbImage(img image.Image, w int, h int) image.Image {
-	max := w
-	if w < h {
-		max = h
-	}
-	return r.Thumbnail(uint(max), uint(max), img, r.Lanczos3)
-}
-
-func resizeImage(img image.Image, w int, h int, smart bool) image.Image {
-	resizer := nfnt.NewResizer(r.Lanczos3)
-	if smart {
-		analyzer := smartcrop.NewAnalyzer(resizer)
-		topCrop, _ := analyzer.FindBestCrop(img, w, h)
-		type SubImager interface {
-			SubImage(r image.Rectangle) image.Image
-		}
-		img = img.(SubImager).SubImage(topCrop)
-	}
-	return resizer.Resize(img, uint(w), uint(h))
-}
-
-func grayscaleImage(img image.Image) image.Image {
-	grayscale := image.NewGray(img.Bounds())
-	for y := img.Bounds().Min.Y; y < grayscale.Bounds().Max.Y; y++ {
-		for x := img.Bounds().Min.X; x < img.Bounds().Max.X; x++ {
-			grayscale.Set(x, y, img.At(x, y))
-		}
-	}
-	return grayscale
 }

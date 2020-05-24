@@ -18,7 +18,7 @@ import (
 func requestHandler(ctx *fasthttp.RequestCtx) {
 
 	patterns := [2]string{
-		`/i/(?P<slug>gdrive|gridfs)/(?P<quality_r_1_100>\d+)/(?P<width_r_0_5000>\d+)x(?P<height_r_0_5000>\d+)/(?P<option>[gts]{1,3})/(?P<path>.*)`,
+		`/i/(?P<slug>gdrive|gridfs)/(?P<quality_r_1_100>\d+)/(?P<width_r_0_5000>\d+)x(?P<height_r_0_5000>\d+)/(?P<option>[gtc]{1,3})/(?P<path>.*)`,
 		`/i/(?P<slug>gdrive|gridfs)/(?P<quality_r_1_100>\d+)/(?P<width_r_0_5000>\d+)x(?P<height_r_0_5000>\d+)/(?P<path>.*)`,
 	}
 

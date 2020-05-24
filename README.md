@@ -89,11 +89,11 @@ Another one is **[Varnish HTTP Cache](https://varnish-cache.org/)**. It will aut
 
 ## Options
 
-| Option | Description                                                                                                                                                                                                                         |
-| ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `t`    | Make this image into a thumbnail. This method modifies the image to contain a thumbnail version of itself, no larger than the given size. This method calculates an appropriate thumbnail size to preserve the aspect of the image. |
-| `g`    | This will convert the given image into a grayscale image.                                                                                                                                                                           |
-| `s`    | This will crop the given image smartly with using [this](https://pkg.go.dev/github.com/muesli/smartcrop) package.                                                                                                                   |
+| Option | Description                                                                                                                 |
+| ------ | --------------------------------------------------------------------------------------------------------------------------- |
+| `g`    | This will convert the given image into a grayscale image.                                                                   |
+| `t`    | This will scales the image up or down, crops it to the specified width and hight and returns the transformed image.         |
+| `c`    | This will cuts out a rectangular region with the specified size from the center of the image and returns the cropped image. |
 
 ## Samples
 
@@ -113,7 +113,7 @@ Another one is **[Varnish HTTP Cache](https://varnish-cache.org/)**. It will aut
 
 ![4](assets/4.png)
 
-- **Resize with smart crop:** `http://127.0.0.1:8080/i/gdrive/100/1600x600/s/[YOUR_FILE_ID]` or `http://127.0.0.1:8080/i/gridfs/100/1600x600/s/[MONGODB_OBJECT_ID]`
+- **Resize with crop:** `http://127.0.0.1:8080/i/gdrive/100/1600x600/c/[YOUR_FILE_ID]` or `http://127.0.0.1:8080/i/gridfs/100/1600x600/c/[MONGODB_OBJECT_ID]`
 
 ![5](assets/5.png)
 
