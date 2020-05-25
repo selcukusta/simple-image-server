@@ -1,3 +1,4 @@
+ARG APP_VERSION=Unknown
 FROM golang:1.14-alpine as builder
 COPY . $GOPATH/src/github.com/selcukusta/simple-image-server
 WORKDIR $GOPATH/src/github.com/selcukusta/simple-image-server/cmd/image-server
@@ -6,6 +7,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -a -installsuffix cgo -o 
 FROM scratch as final
 COPY --from=builder /go/bin/simple-image-server /go/bin/simple-image-server
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+ENV APP_VERSION=${APP_VERSION}
 ENV ABS_ACCOUNT_KEY=YOUR_ACCOUNT_KEY
 ENV ABS_ACCOUNT_NAME=YOUR_ACCOUNT_NAME
 ENV ABS_AZURE_URI=YOUR_AZURE_URI
