@@ -9,6 +9,7 @@ import (
 	"github.com/selcukusta/simple-image-server/internal/handler/abs"
 	"github.com/selcukusta/simple-image-server/internal/handler/googledrive"
 	"github.com/selcukusta/simple-image-server/internal/handler/gridfs"
+	"github.com/selcukusta/simple-image-server/internal/handler/version"
 	"github.com/selcukusta/simple-image-server/internal/util/connection"
 	"github.com/selcukusta/simple-image-server/internal/util/constant"
 	"github.com/selcukusta/simple-image-server/internal/util/helper"
@@ -17,19 +18,24 @@ import (
 )
 
 func requestHandler(ctx *fasthttp.RequestCtx) {
+	path := string(ctx.Path())
+
+	if path == "/version" {
+		version.Handler(ctx)
+		return
+	}
 
 	patterns := [2]string{
 		`/i/(?P<slug>gdrive|gridfs|abs)/(?P<quality_r_1_100>\d+)/(?P<width_r_0_5000>\d+)x(?P<height_r_0_5000>\d+)/(?P<option>[gtc]{1,3})/(?P<path>.*)`,
 		`/i/(?P<slug>gdrive|gridfs|abs)/(?P<quality_r_1_100>\d+)/(?P<width_r_0_5000>\d+)x(?P<height_r_0_5000>\d+)/(?P<path>.*)`,
 	}
 
-	available, vars := helper.IsRouteFit(patterns, string(ctx.Path()))
+	available, vars := helper.IsRouteFit(patterns, path)
 	if !available {
 		ctx.SetStatusCode(fasthttp.StatusNotFound)
 		return
 	}
 	slug := vars["slug"]
-	path := string(ctx.Path())
 	defer helper.TraceObject{HandlerName: slug, Parameter: path}.TimeTrack(time.Now())
 	switch slug {
 	case "gdrive":
