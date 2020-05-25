@@ -9,5 +9,8 @@ COPY --from=builder /go/bin/simple-image-server /go/bin/simple-image-server
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /go/bin/gcloud-image-server-cred.json /etc/
 ENV GOOGLE_APPLICATION_CREDENTIALS=/etc/gcloud-image-server-cred.json
+ENV ABS_ACCOUNT_KEY=YOUR_ACCOUNT_KEY
+ENV ABS_ACCOUNT_NAME=YOUR_ACCOUNT_NAME
+ENV ABS_AZURE_URI=YOUR_AZURE_URI
 EXPOSE 8080
 ENTRYPOINT ["/go/bin/simple-image-server"]

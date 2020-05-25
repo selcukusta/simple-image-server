@@ -6,3 +6,12 @@ var (
 	//MaxPoolSize is using to connect MongoDB instance
 	MaxPoolSize uint64
 )
+
+var (
+	//AzureURI is using to connect Azure Blob Storage instance
+	AzureURI string
+	//AccountName is using to connect Azure Blob Storage instance
+	AccountName string
+	//AccountKey is using to connect Azure Blob Storage instance
+	AccountKey string
+)

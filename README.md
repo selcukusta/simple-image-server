@@ -10,17 +10,21 @@
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=selcukusta_gdrive-image-server&metric=code_smells)](https://sonarcloud.io/dashboard?id=selcukusta_gdrive-image-server)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=selcukusta_gdrive-image-server&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=selcukusta_gdrive-image-server)
 
-Turn your Google Drive folder to the image hosting service!
-
-Now, MongoDB GridFS is fully supported!
-
 ## Getting Started
 
-### Google Drive
+### Supported Platforms
+
+- **Google Drive**
+
+- **Azure Blob Storage**
+
+- **MongoDB GridFS**
+
+#### Google Drive
 
 You need to have a Google account to set up the project.
 
-#### Setup steps for using Google Drive API
+##### Setup steps for using Google Drive API
 
 Firstly, create a new project from [Google Developer Console](https://console.developers.google.com/). Go to the **Credentials** menu and create a new **Service Accounts** credential. It might be named as `[PROJECT_ALIAS]-xxxx-xxxxxxx.json`.
 
@@ -28,7 +32,7 @@ Download it and rename as `gcloud-image-server-cred.json`. Put the file to the *
 
 Copy your service account mail address (_it will be used for sharing your images with the project_).
 
-#### Setup steps for host the images
+##### Setup steps for host the images
 
 Go to your Drive page and create a folder, ie. `image-server`.
 
@@ -38,7 +42,27 @@ As a last step, upload any image (mime should be `image/jpeg` or `image/png`) to
 
 _NOTE: `ID` is not showing anywhere in the portal, it sucks! To catch it, right click your item and select `Get Shareable Link`. Copy the last part of it, and toggle off the sharable link feature._
 
-### MongoDB
+#### Azure Blob Storage
+
+##### Setup steps for using Azure Blob Storage
+
+If you have an Azure Account and blob storage subscription, you have to create a new Access Key from portal or CLI. It could be like that; `DefaultEndpointsProtocol=https;AccountName=[YOUR_STORAGE_NAME];AccountKey=[YOUR_ACCOUNT_KEY]==;EndpointSuffix=core.windows.net.`
+
+You need to add these values to the environment:
+
+| Name               | Type     |
+| :----------------- | :------- |
+| `ABS_ACCOUNT_KEY`  | `string` |
+| `ABS_ACCOUNT_NAME` | `uint64` |
+| `ABS_AZURE_URI`    | `string` |
+
+##### Setup steps for host the images
+
+You can create a new container from Blob service > Container menus. Assume that you have a container which is named as sample-photos. It has two directories and a the picture at the last directory (summer > hotels > swimming.jpg).
+
+Reach your blob with the url: `https://localhost:5001/i/abs/100/400x0/sample-photos/summer/hotels/swimming.jpg`
+
+#### MongoDB
 
 Before running the application set these environment variables (or use `Docker` image, run with `docker container run -d --name mongodb-instance -p 27017:27017 mongo:3.6.18-xenial` and leave them default):
 

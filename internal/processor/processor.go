@@ -25,7 +25,7 @@ func ImageProcess(params map[string]string, imageAsByte []byte, contentType stri
 		img, err = jpeg.Decode(bytes.NewReader(imageAsByte))
 	}
 
-	if err != nil {
+	if err != nil || img == nil {
 		return nil, fmt.Sprintf("Image (%s) decode process is failed", contentType), err
 	}
 

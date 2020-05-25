@@ -55,6 +55,12 @@ func (hf SucceededFinalizer) Finalize(params map[string]string, imageAsByte []by
 		return
 	}
 
+	if result == nil {
+		customError := CustomError{Message: "Image could not be processed"}
+		FailedFinalizer{ResponseWriter: hf.ResponseWriter, StdOut: &customError}.Finalize()
+		return
+	}
+
 	if constant.CacheControlMaxAge != -1 {
 		maxAge := constant.CacheControlMaxAge * 24 * 60 * 60
 		hf.ResponseWriter.Response.Header.Add("Cache-Control", fmt.Sprintf("public, max-age=%d", maxAge))
