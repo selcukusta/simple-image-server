@@ -1,10 +1,11 @@
-ARG APP_VERSION=Unknown
+ARG APP_VERSION
 FROM golang:1.14-alpine as builder
 COPY . $GOPATH/src/github.com/selcukusta/simple-image-server
 WORKDIR $GOPATH/src/github.com/selcukusta/simple-image-server/cmd/image-server
 RUN go get -d -v
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -a -installsuffix cgo -o $GOPATH/bin/simple-image-server .
 FROM scratch as final
+ARG APP_VERSION
 COPY --from=builder /go/bin/simple-image-server /go/bin/simple-image-server
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 ENV APP_VERSION=${APP_VERSION}
