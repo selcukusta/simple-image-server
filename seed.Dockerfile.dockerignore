@@ -76,5 +76,7 @@ LICENSE
 README.md
 seed.Dockerfile
 seed.Dockerfile.dockerignore
+without-gdrive.Dockerfile
+without-gdrive.Dockerfile.dockerignore
 
 # End of https://www.gitignore.io/api/go,macos,visualstudiocode
