@@ -20,7 +20,7 @@
 
 - **MongoDB GridFS**
 
-#### Google Drive
+#### 💻 Google Drive
 
 You need to have a Google account to set up the project.
 
@@ -42,7 +42,7 @@ As a last step, upload any image (mime should be `image/jpeg` or `image/png`) to
 
 _NOTE: `ID` is not showing anywhere in the portal, it sucks! To catch it, right click your item and select `Get Shareable Link`. Copy the last part of it, and toggle off the sharable link feature._
 
-#### Azure Blob Storage
+#### 💻 Azure Blob Storage
 
 ##### Setup steps for using Azure Blob Storage
 
@@ -58,11 +58,11 @@ You need to add these values to the environment:
 
 ##### Setup steps for host the images
 
-You can create a new container from Blob service > Container menus. Assume that you have a container which is named as sample-photos. It has two directories and a the picture at the last directory (summer > hotels > swimming.jpg).
+You can create a new container from Blob service > Container menus. Assume that you have a container which is named as sample-photos. It has two directories and a the picture at the last directory (_summer > hotels > swimming.jpg_).
 
 Reach your blob with the url: `https://localhost:5001/i/abs/100/400x0/sample-photos/summer/hotels/swimming.jpg`
 
-#### MongoDB
+#### 💻 MongoDB
 
 Before running the application set these environment variables (or use `Docker` image, run with `docker container run -d --name mongodb-instance -p 27017:27017 mongo:3.6.18-xenial` and leave them default):
 
