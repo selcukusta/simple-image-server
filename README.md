@@ -53,7 +53,7 @@ You need to add these values to the environment:
 | Name               | Type     |
 | :----------------- | :------- |
 | `ABS_ACCOUNT_KEY`  | `string` |
-| `ABS_ACCOUNT_NAME` | `uint64` |
+| `ABS_ACCOUNT_NAME` | `string` |
 | `ABS_AZURE_URI`    | `string` |
 
 ##### Setup steps for host the images
