@@ -25,7 +25,7 @@ func requestHandler(ctx *fasthttp.RequestCtx) {
 
 	available, vars := helper.IsRouteFit(patterns, string(ctx.Path()))
 	if !available {
-		ctx.SetStatusCode(fasthttp.StatusBadRequest)
+		ctx.SetStatusCode(fasthttp.StatusNotFound)
 		return
 	}
 	slug := vars["slug"]
