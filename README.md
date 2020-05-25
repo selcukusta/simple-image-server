@@ -103,6 +103,14 @@ Another one is **[Varnish HTTP Cache](https://varnish-cache.org/)**. It will aut
 /i/gdrive/{quality:range(0,100)}/{w:range(0,5000)}x{h:range(0,5000)}/{*id}
 ```
 
+### Azure Blob Storage
+
+```
+/i/abs/{quality:range(0,100)}/{w:range(0,5000)}x{h:range(0,5000)}/{options:opt}/{*id}
+
+/i/abs/{quality:range(0,100)}/{w:range(0,5000)}x{h:range(0,5000)}/{*id}
+```
+
 ### MongoDB
 
 ```
@@ -121,31 +129,31 @@ Another one is **[Varnish HTTP Cache](https://varnish-cache.org/)**. It will aut
 
 ## Samples
 
-- **Original size:** `http://127.0.0.1:8080/i/gdrive/100/0x0/[YOUR_FILE_ID]` or `http://127.0.0.1:8080/i/gridfs/100/0x0/[MONGODB_OBJECT_ID]`
+- **Original size:** `http://127.0.0.1:8080/i/gdrive/100/0x0/[YOUR_FILE_ID]`, `http://127.0.0.1:8080/i/gridfs/100/0x0/[MONGODB_OBJECT_ID]` or `http://127.0.0.1:8080/i/abs/100/0x0/[YOUR_STORAGE_PATH]`
 
 ![1](assets/1.png)
 
-- **Resize with aspect ratio:** `http://127.0.0.1:8080/i/gdrive/100/500x0/[YOUR_FILE_ID]` or `http://127.0.0.1:8080/i/gridfs/100/500x0/[MONGODB_OBJECT_ID]`
+- **Resize with aspect ratio:** `http://127.0.0.1:8080/i/gdrive/100/500x0/[YOUR_FILE_ID]`, `http://127.0.0.1:8080/i/gridfs/100/500x0/[MONGODB_OBJECT_ID]` or `http://127.0.0.1:8080/i/abs/100/500x0/[YOUR_STORAGE_PATH]`
 
 ![2](assets/2.png)
 
-- **Less quality:** `http://127.0.0.1:8080/i/gdrive/1/0x0/[YOUR_FILE_ID]` or `http://127.0.0.1:8080/i/gridfs/1/0x0/[MONGODB_OBJECT_ID]`
+- **Less quality:** `http://127.0.0.1:8080/i/gdrive/1/0x0/[YOUR_FILE_ID]`,`http://127.0.0.1:8080/i/gridfs/1/0x0/[MONGODB_OBJECT_ID]` or `http://127.0.0.1:8080/i/abs/1/0x0/[YOUR_STORAGE_PATH]`
 
 ![3](assets/3.png)
 
-- **Resize without aspect ratio:** `http://127.0.0.1:8080/i/gdrive/100/1600x600/[YOUR_FILE_ID]` or `http://127.0.0.1:8080/i/gridfs/100/1600x600/[MONGODB_OBJECT_ID]`
+- **Resize without aspect ratio:** `http://127.0.0.1:8080/i/gdrive/100/1600x600/[YOUR_FILE_ID]`, `http://127.0.0.1:8080/i/gridfs/100/1600x600/[MONGODB_OBJECT_ID]` or `http://127.0.0.1:8080/i/abs/100/1600x600/[YOUR_STORAGE_PATH]`
 
 ![4](assets/4.png)
 
-- **Resize with crop:** `http://127.0.0.1:8080/i/gdrive/100/1600x600/c/[YOUR_FILE_ID]` or `http://127.0.0.1:8080/i/gridfs/100/1600x600/c/[MONGODB_OBJECT_ID]`
+- **Resize with crop:** `http://127.0.0.1:8080/i/gdrive/100/1600x600/c/[YOUR_FILE_ID]`, `http://127.0.0.1:8080/i/gridfs/100/1600x600/c/[MONGODB_OBJECT_ID]` or `http://127.0.0.1:8080/i/abs/100/1600x600/c/[YOUR_STORAGE_PATH]`
 
 ![5](assets/5.png)
 
-- **Create thumbnail with aspect ratio:** `http://127.0.0.1:8080/i/gdrive/100/0x300/t/[YOUR_FILE_ID]` or `http://127.0.0.1:8080/i/gridfs/100/0x300/t/[MONGODB_OBJECT_ID]`
+- **Create thumbnail with aspect ratio:** `http://127.0.0.1:8080/i/gdrive/100/0x300/t/[YOUR_FILE_ID]`, `http://127.0.0.1:8080/i/gridfs/100/0x300/t/[MONGODB_OBJECT_ID]` or `http://127.0.0.1:8080/i/abs/100/0x300/t/[YOUR_STORAGE_PATH]`
 
 ![6](assets/6.png)
 
-- **Grayscale:** `http://127.0.0.1:8080/i/gdrive/100/900x0/g/[YOUR_FILE_ID]` or `http://127.0.0.1:8080/i/gridfs/100/900x0/g/[MONGODB_OBJECT_ID]`
+- **Grayscale:** `http://127.0.0.1:8080/i/gdrive/100/900x0/g/[YOUR_FILE_ID]`, `http://127.0.0.1:8080/i/gridfs/100/900x0/g/[MONGODB_OBJECT_ID]` or `http://127.0.0.1:8080/i/abs/100/900x0/g/[YOUR_STORAGE_PATH]`
 
 ![7](assets/7.png)
 
