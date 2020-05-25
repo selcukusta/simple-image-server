@@ -60,7 +60,7 @@ You need to add these values to the environment:
 
 You can create a new container from Blob service > Container menus. Assume that you have a container which is named as sample-photos. It has two directories and a the picture at the last directory (_summer > hotels > swimming.jpg_).
 
-Reach your blob with the url: `https://localhost:5001/i/abs/100/400x0/sample-photos/summer/hotels/swimming.jpg`
+Reach your blob with the url: `http://127.0.0.1:8080/i/abs/100/400x0/sample-photos/summer/hotels/swimming.jpg`
 
 #### 💻 MongoDB
 
