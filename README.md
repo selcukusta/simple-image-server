@@ -69,6 +69,7 @@ Before running the application set these environment variables (or use `Docker` 
 | Name                   | Type     | Default Value               |
 | :--------------------- | :------- | :-------------------------- |
 | `MONGO_CONNECTION_STR` | `string` | _mongodb://127.0.0.1:27017_ |
+| `MONGO_DB_NAME`        | `string` | _Photos_                    |
 | `MONGO_MAX_POOL_SIZE`  | `uint64` | _5_                         |
 
 Run `go run cmd/mongo-seed/main.go` command and create 3 sample record on the DB such as;

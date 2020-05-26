@@ -18,6 +18,7 @@ import (
 func main() {
 
 	flag.StringVar(&connection.ConnectionString, "mongo_connection_str", "mongodb://127.0.0.1:27017", "Specify the connection string to connect to MongoDB instance")
+	flag.StringVar(&connection.DBName, "mongo_db_name", "Photos", "Specify the DB name to determine which database will be used to store the images")
 	flag.Uint64Var(&connection.MaxPoolSize, "mongo_max_pool_size", 5, "Specify the max pool size for MongoDB connections")
 	flag.Parse()
 
@@ -28,7 +29,7 @@ func main() {
 	}
 
 	bucket, err := gridfs.NewBucket(
-		conn.Database("Photos"),
+		conn.Database(connection.DBName),
 	)
 	if err != nil {
 		log.Fatal(err.Error())

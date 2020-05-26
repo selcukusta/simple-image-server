@@ -3,6 +3,8 @@ package connection
 var (
 	//ConnectionString is using to connect MongoDB instance
 	ConnectionString string
+	//DBName is using to determine which DB is used to store images
+	DBName string
 	//MaxPoolSize is using to connect MongoDB instance
 	MaxPoolSize uint64
 )

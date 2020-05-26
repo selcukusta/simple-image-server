@@ -35,7 +35,7 @@ func Handler(ctx *fasthttp.RequestCtx, vars map[string]string) {
 		return
 	}
 
-	db := conn.Database("Photos")
+	db := conn.Database(connection.DBName)
 
 	bucket, err := gridfs.NewBucket(db)
 	if err != nil {
