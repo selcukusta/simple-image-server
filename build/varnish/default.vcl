@@ -49,6 +49,11 @@ sub vcl_backend_response {
 }
 
 sub vcl_recv {
+  unset req.http.Cache-Control;
+  unset req.http.Max-Age;
+  unset req.http.Pragma;
+  unset req.http.Cookie;
+  
   if (req.url == "/version") {
         return(pass);
   }
@@ -60,10 +65,6 @@ sub vcl_recv {
     return (purge);
   }
 
-  unset req.http.Cache-Control;
-  unset req.http.Max-Age;
-  unset req.http.Pragma;
-  unset req.http.Cookie;
   return (hash);
 }
 
