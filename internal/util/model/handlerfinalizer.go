@@ -56,7 +56,7 @@ func (hf SucceededFinalizer) Finalize(params map[string]string, imageAsByte []by
 	}
 
 	if result == nil {
-		customError := CustomError{Message: "Image could not be processed"}
+		customError := CustomError{Message: errMessage}
 		FailedFinalizer{ResponseWriter: hf.ResponseWriter, StdOut: &customError}.Finalize()
 		return
 	}
