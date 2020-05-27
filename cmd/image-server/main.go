@@ -13,6 +13,7 @@ import (
 	"github.com/selcukusta/simple-image-server/internal/util/connection"
 	"github.com/selcukusta/simple-image-server/internal/util/constant"
 	"github.com/selcukusta/simple-image-server/internal/util/helper"
+	"github.com/selcukusta/simple-image-server/internal/util/logger"
 	"github.com/selcukusta/simple-image-server/internal/util/middleware"
 	"github.com/valyala/fasthttp"
 )
@@ -72,6 +73,8 @@ func main() {
 	handler = middleware.CommonMiddleware(handler)
 
 	addr := fmt.Sprintf("%s:%s", constant.Hostname, constant.Port)
-	log.Println(fmt.Sprintf("Server is started: %s", addr))
+	logger.WriteLog(logger.INFO, fmt.Sprintf("Server is started: %s", addr))
+
+	// log.Println(fmt.Sprintf("Server is started: %s", addr))
 	log.Fatal(fasthttp.ListenAndServe(addr, handler))
 }
