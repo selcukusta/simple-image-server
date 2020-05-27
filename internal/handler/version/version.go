@@ -2,10 +2,10 @@ package version
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/selcukusta/simple-image-server/internal/util/constant"
+	"github.com/selcukusta/simple-image-server/internal/util/logger"
 	"github.com/valyala/fasthttp"
 )
 
@@ -18,6 +18,6 @@ func Handler(ctx *fasthttp.RequestCtx) {
 	ctx.Response.Header.Set("Content-Type", "text/plain")
 	_, err := ctx.Write([]byte(version))
 	if err != nil {
-		log.Println(fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
+		logger.WriteLog(logger.ERROR, fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
 	}
 }

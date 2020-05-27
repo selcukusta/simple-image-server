@@ -2,10 +2,10 @@ package model
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/selcukusta/simple-image-server/internal/processor"
 	"github.com/selcukusta/simple-image-server/internal/util/constant"
+	"github.com/selcukusta/simple-image-server/internal/util/logger"
 	"github.com/valyala/fasthttp"
 )
 
@@ -32,9 +32,9 @@ type CustomError struct {
 func (hf FailedFinalizer) Finalize() {
 	if hf.StdOut != nil {
 		if hf.StdOut.Detail != nil {
-			log.Println(fmt.Sprintf(constant.LogErrorFormat, hf.StdOut.Message, hf.StdOut.Detail.Error()))
+			logger.WriteLog(logger.ERROR, fmt.Sprintf(constant.LogErrorFormat, hf.StdOut.Message, hf.StdOut.Detail.Error()))
 		} else {
-			log.Println(hf.StdOut.Message)
+			logger.WriteLog(logger.ERROR, hf.StdOut.Message)
 		}
 	}
 
@@ -42,7 +42,7 @@ func (hf FailedFinalizer) Finalize() {
 	hf.ResponseWriter.SetStatusCode(fasthttp.StatusInternalServerError)
 	_, err := hf.ResponseWriter.WriteString(constant.ErrorMessage)
 	if err != nil {
-		log.Println(fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
+		logger.WriteLog(logger.ERROR, fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
 	}
 }
 
@@ -75,6 +75,6 @@ func (hf SucceededFinalizer) Finalize(params map[string]string, imageAsByte []by
 	hf.ResponseWriter.Response.Header.Set("Content-Type", hf.ContentType)
 	_, err = hf.ResponseWriter.Write(result)
 	if err != nil {
-		log.Println(fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
+		logger.WriteLog(logger.INFO, fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
 	}
 }
