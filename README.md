@@ -3,6 +3,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/selcukusta/gdrive-image-server)](https://goreportcard.com/report/github.com/selcukusta/gdrive-image-server)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/selcukusta/gdrive-image-server)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/selcukusta/gdrive-image-server/blob/master/LICENSE)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fselcukusta%2Fgdrive-image-server.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fselcukusta%2Fgdrive-image-server?ref=badge_shield)
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=selcukusta_gdrive-image-server&metric=alert_status)](https://sonarcloud.io/dashboard?id=selcukusta_gdrive-image-server)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=selcukusta_gdrive-image-server&metric=sqale_index)](https://sonarcloud.io/dashboard?id=selcukusta_gdrive-image-server)
@@ -161,3 +162,6 @@ Another one is **[Varnish HTTP Cache](https://varnish-cache.org/)**. It will aut
 ## LICENSE
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fselcukusta%2Fgdrive-image-server.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fselcukusta%2Fgdrive-image-server?ref=badge_large)
