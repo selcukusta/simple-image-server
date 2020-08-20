@@ -89,9 +89,13 @@ Run `go run cmd/mongo-seed/main.go` command and create 3 sample record on the DB
 
 - Surf to the URLs such as below.
 
-Two containers will be bringing up. The first one is your image server application. It was written with purely **[the Go programming language](https://golang.org/)**.
+Three containers will be bringing up. The first one is your image server application. It was written with purely **[the Go programming language](https://golang.org/)**. It can be reached with _[http://localhost:8080/version](http://localhost:8080/version)_
 
-Another one is **[Varnish HTTP Cache](https://varnish-cache.org/)**. It will automatically cache the output of the response for 14 days.
+Another one is **[Varnish HTTP Cache](https://varnish-cache.org/)**. It will automatically cache the output of the response for 14 days. It can be reached with _[http://localhost:8081/version](http://localhost:8081/version)_
+
+The latest one, **[nuster](https://github.com/jiangwenyuan/nuster)**. Nuster, a high-performance HTTP proxy cache server and RESTful NoSQL cache server based on HAProxy. It will automatically cache the output of the response for 14 days like Varnish. It can be reached with _[http://localhost:8082/version](http://localhost:8082/version)_
+
+_You can choose any cache server according to your experience._
 
 ## Usage
 
@@ -162,6 +166,5 @@ Another one is **[Varnish HTTP Cache](https://varnish-cache.org/)**. It will aut
 ## LICENSE
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fselcukusta%2Fgdrive-image-server.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fselcukusta%2Fgdrive-image-server?ref=badge_large)

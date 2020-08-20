@@ -22,10 +22,21 @@ services:
     restart: on-failure
     environment:
       MONGO_CONNECTION_STR: "mongodb://db:27017"
-  cache:
+      PORT: 80
+    # If you need to reach the application without any cache server, uncomment the following lines:
+    ports:
+      - "8080:80"
+  varnish:
     depends_on:
       - web
     build: ./build/varnish
     ports:
-      - "8080:80"
+      - "8081:80"
+    restart: on-failure
+  nuster:
+    depends_on:
+      - web
+    build: ./build/nuster
+    ports:
+      - "8082:80"
     restart: on-failure
