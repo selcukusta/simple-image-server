@@ -73,6 +73,6 @@ func main() {
 	handler = middleware.CommonMiddleware(handler)
 
 	addr := fmt.Sprintf("%s:%s", constant.Hostname, constant.Port)
-	logger.WriteLog(logger.INFO, fmt.Sprintf("Server is started: %s", addr))
+	logger.WriteLog(logger.Log{Level: logger.INFO, Message: fmt.Sprintf("Server is started: %s", addr)})
 	log.Fatal(fasthttp.ListenAndServe(addr, handler))
 }

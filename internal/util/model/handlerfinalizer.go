@@ -32,9 +32,9 @@ type CustomError struct {
 func (hf FailedFinalizer) Finalize() {
 	if hf.StdOut != nil {
 		if hf.StdOut.Detail != nil {
-			logger.WriteLog(logger.ERROR, fmt.Sprintf(constant.LogErrorFormat, hf.StdOut.Message, hf.StdOut.Detail.Error()))
+			logger.WriteLog(logger.Log{Level: logger.ERROR, Message: fmt.Sprintf(constant.LogErrorFormat, hf.StdOut.Message, hf.StdOut.Detail.Error()), Rq: hf.ResponseWriter})
 		} else {
-			logger.WriteLog(logger.ERROR, hf.StdOut.Message)
+			logger.WriteLog(logger.Log{Level: logger.ERROR, Message: hf.StdOut.Message, Rq: hf.ResponseWriter})
 		}
 	}
 
@@ -42,7 +42,7 @@ func (hf FailedFinalizer) Finalize() {
 	hf.ResponseWriter.SetStatusCode(fasthttp.StatusInternalServerError)
 	_, err := hf.ResponseWriter.WriteString(constant.ErrorMessage)
 	if err != nil {
-		logger.WriteLog(logger.ERROR, fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
+		logger.WriteLog(logger.Log{Level: logger.ERROR, Message: fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()), Rq: hf.ResponseWriter})
 	}
 }
 
@@ -75,6 +75,6 @@ func (hf SucceededFinalizer) Finalize(params map[string]string, imageAsByte []by
 	hf.ResponseWriter.Response.Header.Set("Content-Type", hf.ContentType)
 	_, err = hf.ResponseWriter.Write(result)
 	if err != nil {
-		logger.WriteLog(logger.INFO, fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
+		logger.WriteLog(logger.Log{Level: logger.INFO, Message: fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()), Rq: hf.ResponseWriter})
 	}
 }

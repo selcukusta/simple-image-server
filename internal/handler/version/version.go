@@ -18,6 +18,6 @@ func Handler(ctx *fasthttp.RequestCtx) {
 	ctx.Response.Header.Set("Content-Type", "text/plain")
 	_, err := ctx.Write([]byte(version))
 	if err != nil {
-		logger.WriteLog(logger.ERROR, fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()))
+		logger.WriteLog(logger.Log{Level: logger.ERROR, Message: fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()), Rq: ctx})
 	}
 }
