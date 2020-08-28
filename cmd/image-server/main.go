@@ -38,7 +38,7 @@ func requestHandler(ctx *fasthttp.RequestCtx) {
 		}
 
 		slug := vars["slug"]
-		defer helper.TraceObject{HandlerName: slug, Parameter: path}.TimeTrack(time.Now())
+		defer helper.TraceObject{HandlerName: slug, Parameter: path, Rq: ctx}.TimeTrack(time.Now())
 		switch slug {
 		case "gdrive":
 			googledrive.Handler(ctx, vars)
