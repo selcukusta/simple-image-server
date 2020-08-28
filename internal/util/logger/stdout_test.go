@@ -6,7 +6,7 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
-func TestAnother(t *testing.T) {
+func TestClientValuesAreDefinedCorrectly(t *testing.T) {
 	obj := Log{}
 	obj.Level = FATAL
 	obj.Message = "Dummy message"
