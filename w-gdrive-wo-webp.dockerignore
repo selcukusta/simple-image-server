@@ -1,6 +1,6 @@
 **
-!assets/**
 !cmd/**
 !internal/**
+!gcloud-image-server-cred.json
 !go.mod
 !go.sum

@@ -26,12 +26,7 @@ func requestHandler(ctx *fasthttp.RequestCtx) {
 		version.Handler(ctx)
 		return
 	default:
-		patterns := [2]string{
-			`/i/(?P<slug>gdrive|gridfs|abs)/(?P<quality_r_1_100>\d+)/(?P<width_r_0_5000>\d+)x(?P<height_r_0_5000>\d+)/(?P<option>[gtc]{1,3})/(?P<path>.*)`,
-			`/i/(?P<slug>gdrive|gridfs|abs)/(?P<quality_r_1_100>\d+)/(?P<width_r_0_5000>\d+)x(?P<height_r_0_5000>\d+)/(?P<path>.*)`,
-		}
-
-		available, vars := helper.IsRouteFit(patterns, path)
+		available, vars := helper.IsRouteFit(constant.Patterns, path)
 		if !available {
 			ctx.SetStatusCode(fasthttp.StatusNotFound)
 			return
@@ -45,6 +40,7 @@ func requestHandler(ctx *fasthttp.RequestCtx) {
 			return
 		case "gridfs":
 			gridfs.Handler(ctx, vars)
+			return
 		case "abs":
 			abs.Handler(ctx, vars)
 			return

@@ -18,12 +18,14 @@ services:
   web:
     depends_on:
       - db
-    build: ./
+    build:
+      context: ./
+      dockerfile: wo-gdrive-w-webp.Dockerfile
     restart: on-failure
     environment:
       MONGO_CONNECTION_STR: "mongodb://db:27017"
       PORT: 80
-    # If you need to reach the application without any cache server, uncomment the following lines:
+    # If you want to disable to reach the application without any cache server, uncomment the following lines:
     ports:
       - "8080:80"
   varnish:

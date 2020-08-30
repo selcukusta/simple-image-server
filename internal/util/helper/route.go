@@ -7,7 +7,7 @@ import (
 )
 
 //IsRouteFit is using to check route is hitting the provided patterns
-func IsRouteFit(patterns [2]string, url string) (bool, map[string]string) {
+func IsRouteFit(patterns [4]string, url string) (bool, map[string]string) {
 	variables := make(map[string]string)
 	for _, pattern := range patterns {
 		regex := regexp.MustCompile(pattern)

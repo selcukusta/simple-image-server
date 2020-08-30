@@ -6,6 +6,7 @@ import (
 	"github.com/selcukusta/simple-image-server/internal/processor"
 	"github.com/selcukusta/simple-image-server/internal/util/constant"
 	"github.com/selcukusta/simple-image-server/internal/util/logger"
+	"github.com/selcukusta/simple-image-server/internal/util/webp"
 	"github.com/valyala/fasthttp"
 )
 
@@ -72,9 +73,21 @@ func (hf SucceededFinalizer) Finalize(params map[string]string, imageAsByte []by
 		}
 	}
 
-	hf.ResponseWriter.Response.Header.Set("Content-Type", hf.ContentType)
+	contentType := hf.ContentType
+
+	if params["webp"] != "" {
+		converted, err := webp.ConvertToWebp(result)
+		if err != nil {
+			logger.WriteLog(logger.Log{Level: logger.WARN, Message: err.Error(), Rq: hf.ResponseWriter})
+		} else {
+			result = converted
+			contentType = "image/webp"
+		}
+	}
+
+	hf.ResponseWriter.Response.Header.Set("Content-Type", contentType)
 	_, err = hf.ResponseWriter.Write(result)
 	if err != nil {
-		logger.WriteLog(logger.Log{Level: logger.INFO, Message: fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()), Rq: hf.ResponseWriter})
+		logger.WriteLog(logger.Log{Level: logger.ERROR, Message: fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()), Rq: hf.ResponseWriter})
 	}
 }

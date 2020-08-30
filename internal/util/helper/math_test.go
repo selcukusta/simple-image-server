@@ -2,7 +2,7 @@ package helper
 
 import "testing"
 
-type TestDataItem struct {
+type testDataItem struct {
 	input    string
 	minValue int
 	maxValue int
@@ -10,7 +10,7 @@ type TestDataItem struct {
 }
 
 func TestValidateRange(t *testing.T) {
-	dataItems := []TestDataItem{
+	dataItems := []testDataItem{
 		{"100", 0, 100, true},
 		{"0", 0, 100, true},
 		{"101", 0, 100, false},

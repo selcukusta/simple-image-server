@@ -22,6 +22,12 @@
 
 - **MongoDB GridFS**
 
+### Supported Formats
+
+- **image/jpeg**
+- **image/png**
+- **image/webp**
+
 #### 💻 Google Drive
 
 You need to have a Google account to set up the project.
@@ -84,6 +90,32 @@ Run `go run cmd/mongo-seed/main.go` command and create 3 sample record on the DB
 
 ## Running
 
+### Via Docker
+
+#### Build
+
+```bash
+# Build the image with Google Drive and WebP support. gcloud-image-server-cred.json file should be included!
+docker image build -t [YOUR_REPOSITORY]/w-gdrive-w-webp:1.0.0 -f w-gdrive-w-webp.Dockerfile .
+# Build the image with Google Drive without WebP support. gcloud-image-server-cred.json file should be included!
+docker image build -t [YOUR_REPOSITORY]/w-gdrive-wo-webp:1.0.0 -f w-gdrive-wo-webp.Dockerfile .
+# Build the image without Google Drive and with WebP support.
+docker image build -t [YOUR_REPOSITORY]/wo-gdrive-w-webp:1.0.0 -f wo-gdrive-w-webp.Dockerfile .
+# Build the image without Google Drive and withoutt WebP support.
+docker image build -t [YOUR_REPOSITORY]/wo-gdrive-wo-webp:1.0.0 -f wo-gdrive-wo-webp.Dockerfile .
+```
+
+#### Run
+
+```bash
+docker container run -p 8080:8080 --rm [YOUR_REPOSITORY]/w-gdrive-w-webp:1.0.0
+docker container run -p 8080:8080 --rm [YOUR_REPOSITORY]/w-gdrive-wo-webp:1.0.0
+docker container run -p 8080:8080 --rm [YOUR_REPOSITORY]/wo-gdrive-w-webp:1.0.0
+docker container run -p 8080:8080 --rm [YOUR_REPOSITORY]/wo-gdrive-wo-webp:1.0.0
+```
+
+### Via Docker Compose
+
 - `docker-compose up`
 
 - Go to your favorite browser
@@ -100,11 +132,15 @@ _You can choose any cache server according to your experience._
 
 ## Usage
 
-/i/ endpoint is used for image operations, has two different usages:
+/i/ endpoint is used for image operations, has four different usages:
 
 ### Google Drive
 
 ```
+/i/gdrive/webp/{quality:range(0,100)}/{w:range(0,5000)}x{h:range(0,5000)}/{options:opt}/{*id}
+
+/i/gdrive/webp/{quality:range(0,100)}/{w:range(0,5000)}x{h:range(0,5000)}/{*id}
+
 /i/gdrive/{quality:range(0,100)}/{w:range(0,5000)}x{h:range(0,5000)}/{options:opt}/{*id}
 
 /i/gdrive/{quality:range(0,100)}/{w:range(0,5000)}x{h:range(0,5000)}/{*id}
@@ -113,6 +149,10 @@ _You can choose any cache server according to your experience._
 ### Azure Blob Storage
 
 ```
+/i/abs/webp/{quality:range(0,100)}/{w:range(0,5000)}x{h:range(0,5000)}/{options:opt}/{*id}
+
+/i/abs/webp/{quality:range(0,100)}/{w:range(0,5000)}x{h:range(0,5000)}/{*id}
+
 /i/abs/{quality:range(0,100)}/{w:range(0,5000)}x{h:range(0,5000)}/{options:opt}/{*id}
 
 /i/abs/{quality:range(0,100)}/{w:range(0,5000)}x{h:range(0,5000)}/{*id}
@@ -121,10 +161,18 @@ _You can choose any cache server according to your experience._
 ### MongoDB
 
 ```
+/i/gridfs/webp/{quality:range(0,100)}/{w:range(0,5000)}x{h:range(0,5000)}/{options:opt}/{*id}
+
+/i/gridfs/webp/{quality:range(0,100)}/{w:range(0,5000)}x{h:range(0,5000)}/{*id}
+
 /i/gridfs/{quality:range(0,100)}/{w:range(0,5000)}x{h:range(0,5000)}/{options:opt}/{*id}
 
 /i/gridfs/{quality:range(0,100)}/{w:range(0,5000)}x{h:range(0,5000)}/{*id}
 ```
+
+## WebP Support
+
+If you add `/webp/` path to the URL, you can get the image as webp.
 
 ## Options
 

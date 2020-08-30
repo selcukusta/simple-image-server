@@ -1,5 +1,4 @@
 **
-!assets/**
 !cmd/**
 !internal/**
 !go.mod
