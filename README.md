@@ -1,4 +1,4 @@
-# Host Your Own Image Server based on Google Drive
+# Host Your Own Image Server based on MongoDB, Azure Blob Storage or Google Drive
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/selcukusta/simple-image-server)](https://goreportcard.com/report/github.com/selcukusta/simple-image-server)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/selcukusta/simple-image-server)
