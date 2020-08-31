@@ -7,6 +7,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -a -installsuffix cgo -o 
 COPY ./gcloud-image-server-cred.json $GOPATH/bin
 FROM scratch as final
 ARG APP_VERSION
+LABEL maintainer="selcukusta@gmail.com"
 COPY --from=builder /go/bin/simple-image-server /go/bin/simple-image-server
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /go/bin/gcloud-image-server-cred.json /etc/

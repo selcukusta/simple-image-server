@@ -6,6 +6,7 @@ RUN go get -d -v
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -a -installsuffix cgo -o $GOPATH/bin/simple-image-server .
 FROM golang:1.15.0-alpine as final
 ARG APP_VERSION
+LABEL maintainer="selcukusta@gmail.com"
 COPY --from=builder /go/bin/simple-image-server /go/bin/simple-image-server
 RUN apk update && apk upgrade
 RUN apk add --no-cache \

@@ -6,6 +6,7 @@ RUN go get -d -v
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -a -installsuffix cgo -o $GOPATH/bin/simple-image-server .
 FROM scratch as final
 ARG APP_VERSION
+LABEL maintainer="selcukusta@gmail.com"
 COPY --from=builder /go/bin/simple-image-server /go/bin/simple-image-server
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 ENV APP_VERSION=${APP_VERSION}
