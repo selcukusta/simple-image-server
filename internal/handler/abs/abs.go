@@ -60,5 +60,6 @@ func Handler(ctx *fasthttp.RequestCtx, vars map[string]string) {
 
 	headers := make(map[string]string)
 	headers["ETag"] = string(downloadResponse.ETag())
+	headers["Last-Modified"] = downloadResponse.LastModified().Format(time.RFC1123)
 	model.SucceededFinalizer{ResponseWriter: ctx, ContentType: downloadResponse.ContentType()}.Finalize(vars, buf.Bytes())
 }
