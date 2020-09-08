@@ -9,6 +9,7 @@ import (
 
 	"github.com/Azure/azure-storage-blob-go/azblob"
 	"github.com/selcukusta/simple-image-server/internal/util/connection"
+	"github.com/selcukusta/simple-image-server/internal/util/logger"
 	"github.com/selcukusta/simple-image-server/internal/util/model"
 	"github.com/valyala/fasthttp"
 )
@@ -17,7 +18,7 @@ import (
 func Handler(ctx *fasthttp.RequestCtx, vars map[string]string) {
 	path := vars["path"]
 
-	context, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	context, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	credential, err := azblob.NewSharedKeyCredential(connection.AccountName, connection.AccountKey)
@@ -51,12 +52,19 @@ func Handler(ctx *fasthttp.RequestCtx, vars map[string]string) {
 	var buf bytes.Buffer
 	reader := downloadResponse.Body(azblob.RetryReaderOptions{})
 	_, err = buf.ReadFrom(reader)
+
+	defer func() {
+		err := reader.Close()
+		if err != nil {
+			logger.WriteLog(logger.Log{Level: logger.ERROR, Message: err.Error()})
+		}
+	}()
+
 	if err != nil {
 		customError := model.CustomError{Message: "Buffer can not be read", Detail: err}
 		model.FailedFinalizer{ResponseWriter: ctx, StdOut: &customError}.Finalize()
 		return
 	}
-	defer reader.Close()
 
 	headers := make(map[string]string)
 	headers["ETag"] = string(downloadResponse.ETag())
