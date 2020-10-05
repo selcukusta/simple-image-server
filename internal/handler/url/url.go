@@ -14,7 +14,6 @@ import (
 
 //Handler is using connect to public host url and get the image
 func Handler(ctx *fasthttp.RequestCtx, vars map[string]string) {
-	path := vars["path"]
 
 	context, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
