@@ -16,6 +16,8 @@
 
 ### Supported Platforms
 
+- **AWS S3 Storage**
+
 - **Google Drive**
 
 - **Azure Blob Storage**
@@ -27,6 +29,17 @@
 - **image/jpeg**
 - **image/png**
 - **image/webp**
+
+#### 💻 AWS S3 Storage
+
+##### Setup steps for using AWS S3 Storage
+
+If you have any public S3 url such as; `https://[S3_NAME].s3.[S3_REGION].amazonaws.com/path/to/image` you need to set these environment variables:
+
+| Name        | Type     |
+| :---------- | :------- |
+| `S3_NAME`   | `string` |
+| `S3_REGION` | `string` |
 
 #### 💻 Google Drive
 
@@ -134,6 +147,18 @@ _You can choose any cache server according to your experience._
 
 /i/ endpoint is used for image operations, has four different usages:
 
+### AWS S3 Storage
+
+```
+/i/s3/webp/{quality:range(0,100)}/{w:range(0,5000)}x{h:range(0,5000)}/{options:opt}/{*id}
+
+/i/s3/webp/{quality:range(0,100)}/{w:range(0,5000)}x{h:range(0,5000)}/{*id}
+
+/i/s3/{quality:range(0,100)}/{w:range(0,5000)}x{h:range(0,5000)}/{options:opt}/{*id}
+
+/i/s3/{quality:range(0,100)}/{w:range(0,5000)}x{h:range(0,5000)}/{*id}
+```
+
 ### Google Drive
 
 ```
@@ -184,31 +209,31 @@ If you add `/webp/` path to the URL, you can get the image as webp.
 
 ## Samples
 
-- **Original size:** `http://127.0.0.1:8080/i/gdrive/100/0x0/[YOUR_FILE_ID]`, `http://127.0.0.1:8080/i/gridfs/100/0x0/[MONGODB_OBJECT_ID]` or `http://127.0.0.1:8080/i/abs/100/0x0/[YOUR_STORAGE_PATH]`
+- **Original size:** `http://127.0.0.1:8080/i/s3/100/0x0/[PATH_TO_IMAGE]`, `http://127.0.0.1:8080/i/gdrive/100/0x0/[YOUR_FILE_ID]`, `http://127.0.0.1:8080/i/gridfs/100/0x0/[MONGODB_OBJECT_ID]` or `http://127.0.0.1:8080/i/abs/100/0x0/[YOUR_STORAGE_PATH]`
 
 ![1](assets/1.png)
 
-- **Resize with aspect ratio:** `http://127.0.0.1:8080/i/gdrive/100/500x0/[YOUR_FILE_ID]`, `http://127.0.0.1:8080/i/gridfs/100/500x0/[MONGODB_OBJECT_ID]` or `http://127.0.0.1:8080/i/abs/100/500x0/[YOUR_STORAGE_PATH]`
+- **Resize with aspect ratio:** `http://127.0.0.1:8080/i/s3/100/500x0/[PATH_TO_IMAGE]`, `http://127.0.0.1:8080/i/gdrive/100/500x0/[YOUR_FILE_ID]`, `http://127.0.0.1:8080/i/gridfs/100/500x0/[MONGODB_OBJECT_ID]` or `http://127.0.0.1:8080/i/abs/100/500x0/[YOUR_STORAGE_PATH]`
 
 ![2](assets/2.png)
 
-- **Less quality:** `http://127.0.0.1:8080/i/gdrive/1/0x0/[YOUR_FILE_ID]`,`http://127.0.0.1:8080/i/gridfs/1/0x0/[MONGODB_OBJECT_ID]` or `http://127.0.0.1:8080/i/abs/1/0x0/[YOUR_STORAGE_PATH]`
+- **Less quality:** `http://127.0.0.1:8080/i/s3/1/0x0/[PATH_TO_IMAGE]`, `http://127.0.0.1:8080/i/gdrive/1/0x0/[YOUR_FILE_ID]`, `http://127.0.0.1:8080/i/gridfs/1/0x0/[MONGODB_OBJECT_ID]` or `http://127.0.0.1:8080/i/abs/1/0x0/[YOUR_STORAGE_PATH]`
 
 ![3](assets/3.png)
 
-- **Resize without aspect ratio:** `http://127.0.0.1:8080/i/gdrive/100/1600x600/[YOUR_FILE_ID]`, `http://127.0.0.1:8080/i/gridfs/100/1600x600/[MONGODB_OBJECT_ID]` or `http://127.0.0.1:8080/i/abs/100/1600x600/[YOUR_STORAGE_PATH]`
+- **Resize without aspect ratio:** `http://127.0.0.1:8080/i/s3/100/1600x600/[PATH_TO_IMAGE]`, `http://127.0.0.1:8080/i/gdrive/100/1600x600/[YOUR_FILE_ID]`, `http://127.0.0.1:8080/i/gridfs/100/1600x600/[MONGODB_OBJECT_ID]` or `http://127.0.0.1:8080/i/abs/100/1600x600/[YOUR_STORAGE_PATH]`
 
 ![4](assets/4.png)
 
-- **Resize with crop:** `http://127.0.0.1:8080/i/gdrive/100/1600x600/c/[YOUR_FILE_ID]`, `http://127.0.0.1:8080/i/gridfs/100/1600x600/c/[MONGODB_OBJECT_ID]` or `http://127.0.0.1:8080/i/abs/100/1600x600/c/[YOUR_STORAGE_PATH]`
+- **Resize with crop:** `http://127.0.0.1:8080/i/s3/100/1600x600/c/[PATH_TO_IMAGE]`, `http://127.0.0.1:8080/i/gdrive/100/1600x600/c/[YOUR_FILE_ID]`, `http://127.0.0.1:8080/i/gridfs/100/1600x600/c/[MONGODB_OBJECT_ID]` or `http://127.0.0.1:8080/i/abs/100/1600x600/c/[YOUR_STORAGE_PATH]`
 
 ![5](assets/5.png)
 
-- **Create thumbnail with aspect ratio:** `http://127.0.0.1:8080/i/gdrive/100/0x300/t/[YOUR_FILE_ID]`, `http://127.0.0.1:8080/i/gridfs/100/0x300/t/[MONGODB_OBJECT_ID]` or `http://127.0.0.1:8080/i/abs/100/0x300/t/[YOUR_STORAGE_PATH]`
+- **Create thumbnail with aspect ratio:** `http://127.0.0.1:8080/i/s3/100/0x300/t/[PATH_TO_IMAGE]`, `http://127.0.0.1:8080/i/gdrive/100/0x300/t/[YOUR_FILE_ID]`, `http://127.0.0.1:8080/i/gridfs/100/0x300/t/[MONGODB_OBJECT_ID]` or `http://127.0.0.1:8080/i/abs/100/0x300/t/[YOUR_STORAGE_PATH]`
 
 ![6](assets/6.png)
 
-- **Grayscale:** `http://127.0.0.1:8080/i/gdrive/100/900x0/g/[YOUR_FILE_ID]`, `http://127.0.0.1:8080/i/gridfs/100/900x0/g/[MONGODB_OBJECT_ID]` or `http://127.0.0.1:8080/i/abs/100/900x0/g/[YOUR_STORAGE_PATH]`
+- **Grayscale:** `http://127.0.0.1:8080/i/s3/100/900x0/g/[PATH_TO_IMAGE]`, `http://127.0.0.1:8080/i/gdrive/100/900x0/g/[YOUR_FILE_ID]`, `http://127.0.0.1:8080/i/gridfs/100/900x0/g/[MONGODB_OBJECT_ID]` or `http://127.0.0.1:8080/i/abs/100/900x0/g/[YOUR_STORAGE_PATH]`
 
 ![7](assets/7.png)
 
