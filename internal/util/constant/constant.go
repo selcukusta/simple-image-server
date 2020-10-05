@@ -24,9 +24,9 @@ var (
 var (
 	//Patterns is using to store valid route patterns
 	Patterns = [4]string{
-		`/i/(?P<slug>gdrive|gridfs|abs|s3)/(?P<quality_r_1_100>\d+)/(?P<width_r_0_5000>\d+)x(?P<height_r_0_5000>\d+)/(?P<option>[gtc]{1,3})/(?P<path>.*)`,
-		`/i/(?P<slug>gdrive|gridfs|abs|s3)/(?P<quality_r_1_100>\d+)/(?P<width_r_0_5000>\d+)x(?P<height_r_0_5000>\d+)/(?P<path>.*)`,
-		`/i/(?P<slug>gdrive|gridfs|abs|s3)/(?P<webp>webp)/(?P<quality_r_1_100>\d+)/(?P<width_r_0_5000>\d+)x(?P<height_r_0_5000>\d+)/(?P<option>[gtc]{1,3})/(?P<path>.*)`,
-		`/i/(?P<slug>gdrive|gridfs|abs|s3)/(?P<webp>webp)/(?P<quality_r_1_100>\d+)/(?P<width_r_0_5000>\d+)x(?P<height_r_0_5000>\d+)/(?P<path>.*)`,
+		`/i/(?P<slug>gdrive|gridfs|abs|s3|url)/(?P<quality_r_1_100>\d+)/(?P<width_r_0_5000>\d+)x(?P<height_r_0_5000>\d+)/(?P<option>[gtc]{1,3})/(?P<path>.*)`,
+		`/i/(?P<slug>gdrive|gridfs|abs|s3|url)/(?P<quality_r_1_100>\d+)/(?P<width_r_0_5000>\d+)x(?P<height_r_0_5000>\d+)/(?P<path>.*)`,
+		`/i/(?P<slug>gdrive|gridfs|abs|s3|url)/(?P<webp>webp)/(?P<quality_r_1_100>\d+)/(?P<width_r_0_5000>\d+)x(?P<height_r_0_5000>\d+)/(?P<option>[gtc]{1,3})/(?P<path>.*)`,
+		`/i/(?P<slug>gdrive|gridfs|abs|s3|url)/(?P<webp>webp)/(?P<quality_r_1_100>\d+)/(?P<width_r_0_5000>\d+)x(?P<height_r_0_5000>\d+)/(?P<path>.*)`,
 	}
 )

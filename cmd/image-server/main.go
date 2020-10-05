@@ -49,6 +49,9 @@ func requestHandler(ctx *fasthttp.RequestCtx) {
 		case "s3":
 			s3.Handler(ctx, vars)
 			return
+		case "url":
+		 	host.Handler(ctx, vars)
+			return
 		}
 	}
 }
@@ -81,6 +84,9 @@ func main() {
 	// s3 flags
 	flag.StringVar(&connection.S3Name, "s3_name", "", "Specify the S3 name to connect S3 Storage account")
 	flag.StringVar(&connection.S3Region, "s3_region", "", "Specify the S3 region to connect S3 Storage account")
+
+	// URL flags
+	flag.StringVar(&connection.URL, "url", "", "Specify the url address")
 
 	flag.Parse()
 

@@ -24,3 +24,8 @@ var (
 	//S3Region is using to connect S3 Storage
 	S3Region string
 )
+
+var (
+	//URL is using to connect public url address
+	URL string
+)
