@@ -17,3 +17,10 @@ var (
 	//AccountKey is using to connect Azure Blob Storage instance
 	AccountKey string
 )
+
+var (
+	//S3Name is using to connect S3 Storage
+	S3Name string
+	//S3Region is using to connect S3 Storage
+	S3Region string
+)

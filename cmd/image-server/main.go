@@ -10,6 +10,7 @@ import (
 	"github.com/selcukusta/simple-image-server/internal/handler/abs"
 	"github.com/selcukusta/simple-image-server/internal/handler/googledrive"
 	"github.com/selcukusta/simple-image-server/internal/handler/gridfs"
+	"github.com/selcukusta/simple-image-server/internal/handler/s3"
 	"github.com/selcukusta/simple-image-server/internal/handler/version"
 	"github.com/selcukusta/simple-image-server/internal/util/connection"
 	"github.com/selcukusta/simple-image-server/internal/util/constant"
@@ -45,6 +46,8 @@ func requestHandler(ctx *fasthttp.RequestCtx) {
 			return
 		case "abs":
 			abs.Handler(ctx, vars)
+		case "s3":
+			s3.Handler(ctx, vars)
 			return
 		}
 	}
@@ -74,6 +77,11 @@ func main() {
 	flag.StringVar(&connection.AccountKey, "abs_account_key", "", "Specify the account key to connect Azure Blob Storage account")
 	flag.StringVar(&connection.AccountName, "abs_account_name", "", "Specify the account name to connect Azure Blob Storage account")
 	flag.StringVar(&connection.AzureURI, "abs_azure_uri", "", "Specify the URI to connect Azure Blob Storage account")
+
+	// s3 flags
+	flag.StringVar(&connection.S3Name, "s3_name", "", "Specify the S3 name to connect S3 Storage account")
+	flag.StringVar(&connection.S3Region, "s3_region", "", "Specify the S3 region to connect S3 Storage account")
+
 	flag.Parse()
 
 	handler := requestHandler
