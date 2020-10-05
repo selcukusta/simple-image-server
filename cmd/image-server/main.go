@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+
 	"time"
 
 	"github.com/namsral/flag"
@@ -15,6 +16,7 @@ import (
 	"github.com/selcukusta/simple-image-server/internal/util/helper"
 	"github.com/selcukusta/simple-image-server/internal/util/logger"
 	"github.com/selcukusta/simple-image-server/internal/util/middleware"
+	"github.com/sirupsen/logrus"
 	"github.com/valyala/fasthttp"
 )
 
@@ -49,6 +51,15 @@ func requestHandler(ctx *fasthttp.RequestCtx) {
 }
 
 func main() {
+	//Set logger
+
+	logrus.SetFormatter(&logrus.JSONFormatter{
+		FieldMap: logrus.FieldMap{
+			logrus.FieldKeyLevel: "Level",
+			logrus.FieldKeyTime:  "@timestamp",
+			logrus.FieldKeyMsg:   "Message",
+		},
+	})
 	// Hosting flags
 	flag.StringVar(&constant.Hostname, "hostname", "127.0.0.1", "Specify the hostname to listen to")
 	flag.StringVar(&constant.Port, "port", "8080", "Specify the port to listen to")
@@ -69,6 +80,6 @@ func main() {
 	handler = middleware.CommonMiddleware(handler)
 
 	addr := fmt.Sprintf("%s:%s", constant.Hostname, constant.Port)
-	logger.WriteLog(logger.Log{Level: logger.INFO, Message: fmt.Sprintf("Server is started: %s", addr)})
+	logger.Init().Info(fmt.Sprintf("Server is started: %s", addr))
 	log.Fatal(fasthttp.ListenAndServe(addr, handler))
 }

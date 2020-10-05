@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 
+	"github.com/pkg/errors"
 	"github.com/selcukusta/simple-image-server/internal/processor"
 	"github.com/selcukusta/simple-image-server/internal/util/constant"
 	"github.com/selcukusta/simple-image-server/internal/util/logger"
@@ -33,9 +34,10 @@ type CustomError struct {
 func (hf FailedFinalizer) Finalize() {
 	if hf.StdOut != nil {
 		if hf.StdOut.Detail != nil {
-			logger.WriteLog(logger.Log{Level: logger.ERROR, Message: fmt.Sprintf(constant.LogErrorFormat, hf.StdOut.Message, hf.StdOut.Detail.Error()), Rq: hf.ResponseWriter})
+			msg := fmt.Sprintf(constant.LogErrorFormat, hf.StdOut.Message, hf.StdOut.Detail.Error())
+			logger.InitExceptionWithRequest(hf.ResponseWriter, errors.WithStack(hf.StdOut.Detail)).Error(msg)
 		} else {
-			logger.WriteLog(logger.Log{Level: logger.ERROR, Message: hf.StdOut.Message, Rq: hf.ResponseWriter})
+			logger.InitWithRequest(hf.ResponseWriter).Error(hf.StdOut.Message)
 		}
 	}
 
@@ -43,7 +45,8 @@ func (hf FailedFinalizer) Finalize() {
 	hf.ResponseWriter.SetStatusCode(fasthttp.StatusInternalServerError)
 	_, err := hf.ResponseWriter.WriteString(constant.ErrorMessage)
 	if err != nil {
-		logger.WriteLog(logger.Log{Level: logger.ERROR, Message: fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()), Rq: hf.ResponseWriter})
+		msg := fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error())
+		logger.InitExceptionWithRequest(hf.ResponseWriter, errors.WithStack(err)).Error(msg)
 	}
 }
 
@@ -78,7 +81,7 @@ func (hf SucceededFinalizer) Finalize(params map[string]string, imageAsByte []by
 	if params["webp"] != "" {
 		converted, err := webp.ConvertToWebp(result)
 		if err != nil {
-			logger.WriteLog(logger.Log{Level: logger.WARN, Message: err.Error(), Rq: hf.ResponseWriter})
+			logger.InitWithRequest(hf.ResponseWriter).Warn(errors.Wrap(err, err.Error()))
 		} else {
 			result = converted
 			contentType = "image/webp"
@@ -88,6 +91,7 @@ func (hf SucceededFinalizer) Finalize(params map[string]string, imageAsByte []by
 	hf.ResponseWriter.Response.Header.Set("Content-Type", contentType)
 	_, err = hf.ResponseWriter.Write(result)
 	if err != nil {
-		logger.WriteLog(logger.Log{Level: logger.ERROR, Message: fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()), Rq: hf.ResponseWriter})
+		msg := fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error())
+		logger.InitExceptionWithRequest(hf.ResponseWriter, errors.WithStack(err)).Error(msg)
 	}
 }

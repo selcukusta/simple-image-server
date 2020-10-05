@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/Azure/azure-storage-blob-go/azblob"
+	"github.com/pkg/errors"
 	"github.com/selcukusta/simple-image-server/internal/util/connection"
 	"github.com/selcukusta/simple-image-server/internal/util/logger"
 	"github.com/selcukusta/simple-image-server/internal/util/model"
@@ -56,7 +57,7 @@ func Handler(ctx *fasthttp.RequestCtx, vars map[string]string) {
 	defer func() {
 		err := reader.Close()
 		if err != nil {
-			logger.WriteLog(logger.Log{Level: logger.ERROR, Message: err.Error()})
+			logger.InitExceptionWithRequest(ctx, errors.WithStack(err)).Error(err.Error())
 		}
 	}()
 

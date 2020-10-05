@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/pkg/errors"
 	"github.com/selcukusta/simple-image-server/internal/util/constant"
 	"github.com/selcukusta/simple-image-server/internal/util/logger"
 	"github.com/valyala/fasthttp"
@@ -18,6 +19,7 @@ func Handler(ctx *fasthttp.RequestCtx) {
 	ctx.Response.Header.Set("Content-Type", "text/plain")
 	_, err := ctx.Write([]byte(version))
 	if err != nil {
-		logger.WriteLog(logger.Log{Level: logger.ERROR, Message: fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error()), Rq: ctx})
+		msg := fmt.Sprintf(constant.LogErrorFormat, constant.LogErrorMessage, err.Error())
+		logger.InitExceptionWithRequest(ctx, errors.WithStack(err)).Error(msg)
 	}
 }
