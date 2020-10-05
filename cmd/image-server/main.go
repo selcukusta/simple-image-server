@@ -50,7 +50,7 @@ func requestHandler(ctx *fasthttp.RequestCtx) {
 			s3.Handler(ctx, vars)
 			return
 		case "url":
-		 	host.Handler(ctx, vars)
+		 	url.Handler(ctx, vars)
 			return
 		}
 	}
