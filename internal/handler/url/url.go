@@ -14,11 +14,12 @@ import (
 
 //Handler is using connect to public host url and get the image
 func Handler(ctx *fasthttp.RequestCtx, vars map[string]string) {
+	path := vars["path"]
 
 	context, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	origin := fmt.Sprintf("%s", connection.URL)
+	origin := fmt.Sprintf("%s%s", connection.URL, path)
 	req, err := http.NewRequest("GET", origin, nil)
 	if err != nil {
 		customError := model.CustomError{Message: "An error has occurred while the request was prepared", Detail: err}
