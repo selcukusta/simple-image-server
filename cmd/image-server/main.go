@@ -11,6 +11,7 @@ import (
 	"github.com/selcukusta/simple-image-server/internal/handler/googledrive"
 	"github.com/selcukusta/simple-image-server/internal/handler/gridfs"
 	"github.com/selcukusta/simple-image-server/internal/handler/s3"
+	"github.com/selcukusta/simple-image-server/internal/handler/url"
 	"github.com/selcukusta/simple-image-server/internal/handler/version"
 	"github.com/selcukusta/simple-image-server/internal/util/connection"
 	"github.com/selcukusta/simple-image-server/internal/util/constant"
